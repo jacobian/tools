@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSF Office Hours</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="schedule.js"></script>
+    <script src="protected-info.js"></script>
+    <style type="text/tailwindcss">
+      section {
+        @apply bg-white rounded-lg shadow-md p-6 mb-8 text-green-900;
+      }
+      section h2 {
+        @apply text-2xl font-semibold text-green-900 mb-4;
+      }
+      section h3 {
+        @apply font-medium text-green-900 mb-2;
+      }
+      section p, section li {
+        @apply mb-3 text-gray-700;
+      }
+      section a {
+        @apply text-green-800 font-bold;
+      }
+      p.time-display {
+        @apply text-2xl font-semibold text-green-900 mb-4;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <header class="mb-8">
+        <h1 class="text-4xl font-bold text-center text-green-900 mb-2">Django Software Foundation Office Hours</h1>
+      </header>
+
+      <section>
+        <h2>About</h2>
+        <p>
+          Weekly office hours to work on anything related to the DSF. At least one board member
+          will try to attend each week.
+        </p>
+        <p>
+          All you need to do is bring something DSF-related to work on. This is intentionally
+          broad, as long as it's vaguely DSF-related you're welcome to come. It's not a
+          general-purpose Django coding session (you're welcome to be writing code but it should be
+          related the DSF, e.g. working on djangoproject.com or somwething.)
+        </p>
+      </section>
+
+      <section>
+        <h2>Rules</h2>
+        <ul>
+          <li>🔕 Please mute when someone else is talking.</li>
+          <li>👍 Follow the <a href="https://www.djangoproject.com/conduct/">Django Code of Conduct</a>.</li>
+          <li>👍 Join because you want to work on something DSF-related with a small group.</li>
+          <li>👍 Asking for help is fine, but please don't dominate the conversation.</li>
+          <li>⚠️ No marketing your product or service.</li>
+          <li>
+            ⚠️ This isn't a session for troubleshooting code — you're welcome to hack on whatever
+            but please ask for coding/debugging help somewhere else.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Schedule</h2>
+        <p class="mb-3">Office Hours take place <strong>every Wednesday at 6:00 PM UTC</strong>.</p>
+        <div id="next-session" class="bg-green-100 rounded-lg p-6">
+          <h3>Next Office Hours:</h3>
+          <p class="time-display" id="next-session-utc">
+            Calculating...
+          </p>
+          <h3>In your time zone (<span id="timezone-info">detecting…</span>):</h3>
+          <p class="time-display" id="next-session-localtime">Calculating...</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>How to join</h2>
+        <div id="password-form" class="mb-4">
+          <p>Enter the password to see joining information:</p>
+          <div class="flex flex-col md:flex-row gap-2">
+            <input type="password" id="password-input" class="border rounded p-2 flex-grow" placeholder="Enter password" />
+            <button id="submit-password" class="bg-green-800 text-white px-4 py-2 rounded hover:bg-indigo-700">Submit</button>
+          </div>
+          <p id="password-error" class="text-red-600 hidden mt-2">Incorrect password. Please try again.</p>
+        </div>
+        </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        ScheduleUtils.init();
+        ProtectedInfo.init();
+      });
+    </script>
+
+  </body>
+</html>
