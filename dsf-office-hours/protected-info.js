@@ -1,7 +1,7 @@
 const ProtectedInfo = {
   // generate here: https://tools.simonwillison.net/encrypt
   CONTENT:
-    "rKs9REo+TL5IaR38/UTERs6+JnTu1LQZ58MsBLO4qRNuibkA3EnFraL3EKJDUQINy0+kbIykNWh3RPIskRhtD/eCXlZ7ngxxm+//aLR7+Syx7JUvX8WMQc2b9bVVqFcq/v2M/K3jrQ==",
+    "BFf1F9GNAu58HL3L9v8t8aXIKsvnawmhlz2CMBAO56XAiHq8bhH+DGKimnZP/C2ED0YEu7Ilge279SNv9cFEWIqiRjSr02OFlirN9pCQERMayqU78ARGUlkBobR3IL7eqAIES+nIYN5yRjzc+NphLx+QklloHuKqMp6Atycz+up6hgIYAhcSzQ0Cv2CkCrEU8PS3iNjlW4Ziclk=",
 
   async generateKey(passphrase, salt) {
     // Convert passphrase to key material
