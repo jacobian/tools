@@ -1,5 +1,6 @@
 ---
 permalink: /index.html
+layout: index.njk
 ---
 
 # tools.jacobian.org

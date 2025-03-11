@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      main {
+        @apply bg-white rounded-lg shadow-md p-6 mb-8 text-red-900;
+      }
+      main h1 {
+        @apply text-2xl font-semibold text-red-900 mb-4;
+      }
+      main h2 {
+        @apply font-medium text-xl text-red-900 mb-2 mt-16;
+      }
+      main p, main li {
+        @apply mb-3 text-gray-700;
+      }
+      main a {
+        @apply text-red-800 font-bold;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <main>{{ content | safe }}</main>
+    </div>
+  </body>
+</html>
