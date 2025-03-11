@@ -1,3 +1,7 @@
+---
+permalink: /index.html
+---
+
 # tools.jacobian.org
 
 Miscellaneous HTML+JavaScript tools, mostly built with LLMs. Inspired by https://tools.simonwillison.net/.
