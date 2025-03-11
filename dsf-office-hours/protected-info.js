@@ -2,6 +2,8 @@ const ProtectedInfo = {
   // generate here: https://tools.simonwillison.net/encrypt
   CONTENT:
     "BFf1F9GNAu58HL3L9v8t8aXIKsvnawmhlz2CMBAO56XAiHq8bhH+DGKimnZP/C2ED0YEu7Ilge279SNv9cFEWIqiRjSr02OFlirN9pCQERMayqU78ARGUlkBobR3IL7eqAIES+nIYN5yRjzc+NphLx+QklloHuKqMp6Atycz+up6hgIYAhcSzQ0Cv2CkCrEU8PS3iNjlW4Ziclk=",
+  
+  STORAGE_KEY: "dsf_office_hours_password",
 
   async generateKey(passphrase, salt) {
     // Convert passphrase to key material
@@ -58,6 +60,23 @@ const ProtectedInfo = {
     }
   },
 
+  savePassword(password) {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, password);
+    } catch (error) {
+      console.error("Error saving password to localStorage:", error);
+    }
+  },
+
+  getSavedPassword() {
+    try {
+      return localStorage.getItem(this.STORAGE_KEY);
+    } catch (error) {
+      console.error("Error retrieving password from localStorage:", error);
+      return null;
+    }
+  },
+
   init() {
     const passwordForm = document.getElementById("password-form");
     const passwordInput = document.getElementById("password-input");
@@ -80,6 +99,9 @@ const ProtectedInfo = {
 
         // Hide any previous error
         passwordError.classList.add("hidden");
+        
+        // Save the password to localStorage for future visits
+        this.savePassword(password);
       } catch (error) {
         // Show error message
         passwordError.classList.remove("hidden");
@@ -95,5 +117,12 @@ const ProtectedInfo = {
         handleSubmit();
       }
     });
+    
+    // Check if we have a saved password and try to decrypt automatically
+    const savedPassword = this.getSavedPassword();
+    if (savedPassword) {
+      passwordInput.value = savedPassword;
+      handleSubmit();
+    }
   },
 };
