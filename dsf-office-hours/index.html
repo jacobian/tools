@@ -7,7 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js"></script>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="schedule.js"></script>
-    <script src="protected-info.js"></script>
     <style type="text/tailwindcss">
       section {
         @apply bg-white rounded-lg shadow-md p-6 mb-8 text-green-900;
@@ -79,21 +78,11 @@
 
       <section>
         <h2>How to join</h2>
-        <div id="password-form" class="mb-4">
-          <p>Enter the password to see joining information:</p>
-          <div class="flex flex-col md:flex-row gap-2">
-            <input type="password" id="password-input" class="border rounded p-2 flex-grow" placeholder="Enter password" />
-            <button id="submit-password" class="bg-green-800 text-white px-4 py-2 rounded hover:bg-indigo-700">Submit</button>
-          </div>
-          <p id="password-error" class="text-red-600 hidden mt-2">Incorrect password. Please try again.</p>
-        </div>
-        </section>
+        <p>Join with Google Meet: <a href="https://meet.google.com/tig-afhf-scg">https://meet.google.com/tig-afhf-scg</a>
+      </section>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        ScheduleUtils.init();
-        ProtectedInfo.init();
-      });
+      document.addEventListener("DOMContentLoaded", function () { ScheduleUtils.init(); });
     </script>
 
   </body>
