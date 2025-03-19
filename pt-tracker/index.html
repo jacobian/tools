@@ -131,11 +131,10 @@
                   <div class="flex-1">
                     <label class="text-sm font-medium mb-1">Reps:</label>
                     <input
-                      type="number"
-                      x-model.number="editExercise.reps"
-                      min="1"
-                      max="30"
+                      type="text"
+                      x-model="editExercise.reps"
                       class="w-full px-2 py-1 border rounded"
+                      placeholder="10 or 30s"
                     />
                   </div>
                 </div>
@@ -182,11 +181,10 @@
               <div class="flex-1">
                 <label class="text-sm font-medium mb-1">Reps:</label>
                 <input
-                  type="number"
-                  x-model.number="newExercise.reps"
-                  min="1"
-                  max="30"
+                  type="text"
+                  x-model="newExercise.reps"
                   class="w-full px-2 py-1 border rounded"
+                  placeholder="10 or 30s"
                 />
               </div>
             </div>
@@ -231,6 +229,12 @@
             reps: 12,
             id: "leg-raises",
           },
+          {
+            name: "Plank",
+            sets: 3,
+            reps: "30s",
+            id: "plank",
+          },
         ];
 
         // Load saved data from localStorage
@@ -261,7 +265,7 @@
           newExercise: {
             name: "",
             sets: 3,
-            reps: 10,
+            reps: "10",
           },
 
           // Track which exercise is being deleted (if any)
@@ -337,8 +341,13 @@
               return;
             }
 
-            if (!this.editExercise.sets || !this.editExercise.reps) {
-              alert("Sets and reps must be at least 1");
+            if (!this.editExercise.sets) {
+              alert("Sets must be at least 1");
+              return;
+            }
+
+            if (!this.editExercise.reps) {
+              alert("Please enter reps or time (e.g. 10 or 30s)");
               return;
             }
 
@@ -365,8 +374,13 @@
               return;
             }
 
-            if (!this.newExercise.sets || !this.newExercise.reps) {
-              alert("Sets and reps must be at least 1");
+            if (!this.newExercise.sets) {
+              alert("Sets must be at least 1");
+              return;
+            }
+
+            if (!this.newExercise.reps) {
+              alert("Please enter reps or time (e.g. 10 or 30s)");
               return;
             }
 
@@ -385,7 +399,7 @@
             this.newExercise = {
               name: "",
               sets: 3,
-              reps: 10,
+              reps: "10",
             };
             this.showAddForm = false;
           },
