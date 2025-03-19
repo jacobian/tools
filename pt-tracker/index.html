@@ -6,16 +6,30 @@
     <title>PT Workout Tracker</title>
     <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      .card {
+        @apply bg-gray-100 rounded-lg p-4 shadow-md mb-4 text-gray-900;
+      }
+      .button {
+        @apply py-2 rounded-md transition;
+      }
+      .button-blue {
+        @apply bg-blue-500 hover:bg-blue-600 text-white;
+      }
+      .button-red {
+        @apply text-white bg-red-500 hover:bg-red-600 transition;
+      }
+      .button-gray {
+        @apply text-white bg-gray-400 hover:bg-gray-600 transition;
+      }
+    </style>
   </head>
-  <body class="bg-gray-100 min-h-screen p-4">
-    <div x-data="workoutTracker()" class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-      <div class="p-3 bg-blue-500 text-white">
-        <h1 class="text-lg font-bold text-center">PT</h1>
-      </div>
-
-      <div class="p-2 space-y-2">
+  <body class="min-h-screen p-4">
+    <div x-data="workoutTracker()" class="max-w-md mx-auto">
+      <!-- List of exercises -->
+      <div>
         <template x-for="(exercise, exerciseIndex) in exercises" :key="exercise.id">
-          <div class="py-2">
+          <div class="card">
             <!-- Normal view -->
             <template x-if="!isDeletingExercise(exercise.id) && !isEditingExercise(exercise.id)">
               <div>
@@ -68,18 +82,8 @@
               <div class="bg-gray-100 p-3 rounded-md">
                 <p class="text-center font-medium mb-2">Confirm?</p>
                 <div class="flex space-x-2">
-                  <button
-                    @click="deleteExercise(exerciseIndex)"
-                    class="flex-1 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
-                  >
-                    Yes, Delete
-                  </button>
-                  <button
-                    @click="cancelDelete()"
-                    class="flex-1 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
-                  >
-                    Cancel
-                  </button>
+                  <button @click="deleteExercise(exerciseIndex)" class="flex-1 button button-red">Yes, Delete</button>
+                  <button @click="cancelDelete()" class="flex-1 button button-gray">Cancel</button>
                 </div>
               </div>
             </template>
@@ -121,18 +125,8 @@
                 </div>
 
                 <div class="flex space-x-2">
-                  <button
-                    @click="saveEdit(exerciseIndex)"
-                    class="flex-1 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-                  >
-                    Save
-                  </button>
-                  <button
-                    @click="cancelEdit()"
-                    class="flex-1 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
-                  >
-                    Cancel
-                  </button>
+                  <button @click="saveEdit(exerciseIndex)" class="flex-1 button button-blue">Save</button>
+                  <button @click="cancelEdit()" class="flex-1 button button-gray">Cancel</button>
                 </div>
               </div>
             </template>
@@ -141,18 +135,13 @@
       </div>
 
       <!-- Add exercise widget -->
-      <div class="p-3 border-t border-b">
+      <div>
         <template x-if="!showAddForm">
-          <button
-            @click="showAddForm = true"
-            class="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-          >
-            Add Another Exercise
-          </button>
+          <button @click="showAddForm = true" class="w-full button button-blue">Add Another Exercise</button>
         </template>
 
         <template x-if="showAddForm">
-          <div class="space-y-2">
+          <div class="card space-x-2">
             <div class="flex flex-col">
               <label class="text-sm font-medium mb-1">Exercise Name:</label>
               <input
@@ -186,27 +175,17 @@
               </div>
             </div>
 
-            <div class="flex space-x-2">
-              <button
-                @click="addExercise()"
-                class="flex-1 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-              >
-                OK
-              </button>
-              <button
-                @click="showAddForm = false"
-                class="flex-1 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
+            <div class="flex space-x-2 pt-2">
+              <button @click="addExercise()" class="flex-1 button button-blue">OK</button>
+              <button @click="showAddForm = false" class="flex-1 button button-gray">Cancel</button>
             </div>
           </div>
         </template>
       </div>
 
-      <div class="p-2">
+      <div class="mt-4">
         <button @click="resetAll" class="w-full py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
-          Clear all completed exercises and start over
+          Start a new workout (clear completed exercises)
         </button>
       </div>
     </div>

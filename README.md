@@ -7,6 +7,8 @@ layout: index.njk
 
 Miscellaneous HTML+JavaScript tools, mostly built with LLMs. Inspired by https://tools.simonwillison.net/.
 
+## Personal
+
 - [PT tracker](pt-tracker/) - track a PT workout, interface somewhat inspired by [StrongLifts](https://stronglifts.com/app/).
 
 ## DSF Stuff
