@@ -234,11 +234,8 @@
         };
 
         return {
-          // Load exercises from localStorage or use defaults
           exercises: loadFromStorage("pt-tracker-exercises", defaultExercises),
-
-          // Completion status is NOT persisted - starts empty each session
-          completedSets: {},
+          completedSets: loadFromStorage("pt-tracker-completed", {}),
 
           // State for add exercise form
           showAddForm: false,
@@ -262,9 +259,12 @@
 
           // Initialize component
           init() {
-            // Only watch for changes to exercises to save to localStorage
+            // Watch for changes andsave
             this.$watch("exercises", (value) => {
               saveToStorage("pt-tracker-exercises", value);
+            });
+            this.$watch("completedSets", (value) => {
+              saveToStorage("pt-tracker-completed", value);
             });
           },
 
