@@ -13,7 +13,6 @@
       <h1 class="text-3xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
 
       <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-
         <table class="w-full mb-4">
           <thead>
             <tr class="bg-green-100 text-left">
@@ -34,9 +33,9 @@
                     @change="saveTrip()"
                     class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                   >
-                    <option value="hike">Hike</option>
-                    <option value="float">Float</option>
-                    <option value="xc">Cross Country</option>
+                    <template x-for="method in travelMethods" :key="method.name">
+                      <option :value="method.name" x-text="method.name"></option>
+                    </template>
                   </select>
                 </td>
                 <td class="px-4 py-2">
@@ -95,23 +94,149 @@
           </button>
         </div>
       </div>
+      
+      <!-- Travel Methods Table -->
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-700">Travel Methods</h2>
+        
+        <table class="w-full mb-4">
+          <thead>
+            <tr class="bg-green-100 text-left">
+              <th class="px-4 py-2 rounded-tl-md">Method Name</th>
+              <th class="px-4 py-2">Minutes per Mile</th>
+              <th class="px-4 py-2">Minutes per 1000 ft Gain</th>
+              <th class="px-4 py-2 rounded-tr-md">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(method, index) in travelMethods" :key="index">
+              <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
+                <td class="px-4 py-2">
+                  <input
+                    type="text"
+                    x-model="method.name"
+                    @change="updateMethodNames(index); saveTrip()"
+                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </td>
+                <td class="px-4 py-2">
+                  <input
+                    type="number"
+                    x-model="method.minutesPerMile"
+                    @input="saveTrip()"
+                    min="0"
+                    step="0.1"
+                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </td>
+                <td class="px-4 py-2">
+                  <input
+                    type="number"
+                    x-model="method.minutesPer1000ft"
+                    @input="saveTrip()"
+                    min="0"
+                    step="0.1"
+                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </td>
+                <td class="px-4 py-2 text-right">
+                  <button
+                    @click="removeMethod(index)"
+                    class="bg-red-200 hover:bg-red-400 text-white px-4 py-2 rounded-md transition"
+                    :disabled="travelMethods.length <= 1"
+                    :class="{'opacity-50 cursor-not-allowed': travelMethods.length <= 1}"
+                  >
+                    ❌
+                  </button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="px-4 py-2 text-right">
+                <button
+                  @click="addMethod()"
+                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
+                >
+                  ➕
+                </button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
 
     <script>
-      function           tripPlanner() {
+      function tripPlanner() {
         return {
           legs: [
             { method: "hike", distance: 3.5, elevationGain: 750 },
             { method: "float", distance: 2.0, elevationGain: 0 },
           ],
+          
+          travelMethods: [
+            { name: "hike", minutesPerMile: 20, minutesPer1000ft: 30 },
+            { name: "float", minutesPerMile: 15, minutesPer1000ft: 0 },
+            { name: "xc", minutesPerMile: 30, minutesPer1000ft: 45 },
+          ],
+          
           addLeg() {
-            this.legs.push({ method: "hike", distance: 0, elevationGain: 0 });
+            // Default to first travel method in the list
+            const defaultMethod = this.travelMethods.length > 0 ? this.travelMethods[0].name : "";
+            this.legs.push({ method: defaultMethod, distance: 0, elevationGain: 0 });
             this.saveTrip();
           },
 
           removeLeg(index) {
             this.legs.splice(index, 1);
             this.saveTrip();
+          },
+          
+          addMethod() {
+            // Store old name for tracking future changes
+            const newMethod = { name: "new method", minutesPerMile: 20, minutesPer1000ft: 30 };
+            newMethod.oldName = newMethod.name;
+            this.travelMethods.push(newMethod);
+            this.saveTrip();
+          },
+          
+          removeMethod(index) {
+            // Prevent removing the last method
+            if (this.travelMethods.length <= 1) {
+              return;
+            }
+            
+            const removedMethod = this.travelMethods[index].name;
+            this.travelMethods.splice(index, 1);
+            
+            // Update any legs that were using the removed method
+            this.legs.forEach(leg => {
+              if (leg.method === removedMethod) {
+                leg.method = this.travelMethods[0].name;
+              }
+            });
+            
+            this.saveTrip();
+          },
+          
+          updateMethodNames(index) {
+            const oldName = this.travelMethods[index].oldName;
+            const newName = this.travelMethods[index].name;
+            
+            // Skip if this is a new method with no prior name
+            if (!oldName) return;
+            
+            // Update leg methods that used the old name
+            this.legs.forEach(leg => {
+              if (leg.method === oldName) {
+                leg.method = newName;
+              }
+            });
+            
+            // Save old name for future updates
+            this.travelMethods[index].oldName = newName;
           },
 
           get totalDistance() {
@@ -133,8 +258,7 @@
 
             let breakdown = [];
             for (const [method, distance] of Object.entries(methods)) {
-              const methodName = method.charAt(0).toUpperCase() + method.slice(1);
-              breakdown.push(`${distance.toFixed(1)} ${methodName.toLowerCase()}`);
+              breakdown.push(`${distance.toFixed(1)} ${method.toLowerCase()}`);
             }
             return breakdown.join(", ");
           },
@@ -142,30 +266,61 @@
           saveTrip() {
             const tripData = {
               legs: this.legs,
+              travelMethods: this.travelMethods,
               totalDistance: this.totalDistance,
               totalElevationGain: this.totalElevationGain,
             };
 
             localStorage.setItem("savedTrip", JSON.stringify(tripData));
-            
-            // Silently save with no timestamp display
           },
 
           clearTrip() {
             if (confirm("Are you sure you want to clear all trip data?")) {
               this.legs = [];
+              // Reset travel methods to defaults
+              this.travelMethods = [
+                { name: "hike", minutesPerMile: 20, minutesPer1000ft: 30 },
+                { name: "float", minutesPerMile: 15, minutesPer1000ft: 0 },
+                { name: "xc", minutesPerMile: 30, minutesPer1000ft: 45 },
+              ];
+              
+              // Set oldName property for default methods
+              this.travelMethods.forEach(method => {
+                method.oldName = method.name;
+              });
+              
               localStorage.removeItem("savedTrip");
-              this.lastSaved = null;
             }
           },
 
           init() {
+            // Set oldName for tracking method name changes
+            this.travelMethods.forEach(method => {
+              method.oldName = method.name;
+            });
+            
             const savedTrip = localStorage.getItem("savedTrip");
             if (savedTrip) {
               const tripData = JSON.parse(savedTrip);
-              this.legs = tripData.legs;
+              
+              // Load saved legs if available
+              if (tripData.legs) {
+                this.legs = tripData.legs;
+              }
+              
+              // Load saved travel methods if available
+              if (tripData.travelMethods) {
+                this.travelMethods = tripData.travelMethods;
+                
+                // Ensure oldName is set for each method
+                this.travelMethods.forEach(method => {
+                  if (!method.oldName) {
+                    method.oldName = method.name;
+                  }
+                });
+              }
             }
-          },
+          }
         };
       }
     </script>
