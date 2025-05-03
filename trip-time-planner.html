@@ -31,6 +31,7 @@
                 <td class="px-4 py-2">
                   <select
                     x-model="leg.method"
+                    @change="saveTrip()"
                     class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                   >
                     <option value="hike">Hike</option>
@@ -42,6 +43,7 @@
                   <input
                     type="number"
                     x-model="leg.distance"
+                    @input="saveTrip()"
                     min="0"
                     step="0.1"
                     class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -51,6 +53,7 @@
                   <input
                     type="number"
                     x-model="leg.elevationGain"
+                    @input="saveTrip()"
                     min="0"
                     class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
@@ -95,20 +98,20 @@
     </div>
 
     <script>
-      function tripPlanner() {
+      function           tripPlanner() {
         return {
-          tripName: "My Hiking Adventure",
           legs: [
             { method: "hike", distance: 3.5, elevationGain: 750 },
             { method: "float", distance: 2.0, elevationGain: 0 },
           ],
-
           addLeg() {
             this.legs.push({ method: "hike", distance: 0, elevationGain: 0 });
+            this.saveTrip();
           },
 
           removeLeg(index) {
             this.legs.splice(index, 1);
+            this.saveTrip();
           },
 
           get totalDistance() {
@@ -138,20 +141,21 @@
 
           saveTrip() {
             const tripData = {
-              name: this.tripName,
               legs: this.legs,
               totalDistance: this.totalDistance,
               totalElevationGain: this.totalElevationGain,
             };
 
             localStorage.setItem("savedTrip", JSON.stringify(tripData));
-            alert("Trip saved successfully!");
+            
+            // Silently save with no timestamp display
           },
 
           clearTrip() {
             if (confirm("Are you sure you want to clear all trip data?")) {
               this.legs = [];
               localStorage.removeItem("savedTrip");
+              this.lastSaved = null;
             }
           },
 
@@ -159,7 +163,6 @@
             const savedTrip = localStorage.getItem("savedTrip");
             if (savedTrip) {
               const tripData = JSON.parse(savedTrip);
-              this.tripName = tripData.name;
               this.legs = tripData.legs;
             }
           },
