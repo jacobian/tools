@@ -1,166 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hiking Trip Planner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.6/htmx.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 font-sans">
+  </head>
+  <body class="bg-gray-100 font-sans">
     <div class="container mx-auto px-4 py-8" x-data="tripPlanner()">
-        <h1 class="text-3xl font-bold text-center text-green-800 mb-6">Multi-Step Trip Planner</h1>
-        
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4 text-green-700">Trip Details</h2>
-            
-            <div class="mb-4">
-                <label for="trip-name" class="block text-sm font-medium text-gray-700 mb-1">Trip Name</label>
-                <input type="text" id="trip-name" x-model="tripName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-            </div>
-            
-            <table class="w-full mb-4">
-                <thead>
-                    <tr class="bg-green-100 text-left">
-                        <th class="px-4 py-2 rounded-tl-md">Leg #</th>
-                        <th class="px-4 py-2">Travel Method</th>
-                        <th class="px-4 py-2">Distance (miles)</th>
-                        <th class="px-4 py-2">Elevation Gain (ft)</th>
-                        <th class="px-4 py-2 rounded-tr-md">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="(leg, index) in legs" :key="index">
-                        <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
-                            <td class="px-4 py-2" x-text="index + 1"></td>
-                            <td class="px-4 py-2">
-                                <select x-model="leg.method" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
-                                    <option value="hike">Hike</option>
-                                    <option value="float">Float</option>
-                                    <option value="xc">Cross Country</option>
-                                </select>
-                            </td>
-                            <td class="px-4 py-2">
-                                <input type="number" x-model="leg.distance" min="0" step="0.1" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
-                            </td>
-                            <td class="px-4 py-2">
-                                <input type="number" x-model="leg.elevationGain" min="0" class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
-                            </td>
-                            <td class="px-4 py-2">
-                                <button @click="removeLeg(index)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition">Remove</button>
-                            </td>
-                        </tr>
-                    </template>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="5" class="px-4 py-4">
-                            <button @click="addLeg()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition">
-                                Add Leg
-                            </button>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+      <h1 class="text-3xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
+
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+
+        <table class="w-full mb-4">
+          <thead>
+            <tr class="bg-green-100 text-left">
+              <th class="px-4 py-2 rounded-tl-md">Leg #</th>
+              <th class="px-4 py-2">Travel Method</th>
+              <th class="px-4 py-2">Distance (miles)</th>
+              <th class="px-4 py-2">Elevation Gain (ft)</th>
+              <th class="px-4 py-2 rounded-tr-md">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(leg, index) in legs" :key="index">
+              <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
+                <td class="px-4 py-2" x-text="index + 1"></td>
+                <td class="px-4 py-2">
+                  <select
+                    x-model="leg.method"
+                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  >
+                    <option value="hike">Hike</option>
+                    <option value="float">Float</option>
+                    <option value="xc">Cross Country</option>
+                  </select>
+                </td>
+                <td class="px-4 py-2">
+                  <input
+                    type="number"
+                    x-model="leg.distance"
+                    min="0"
+                    step="0.1"
+                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </td>
+                <td class="px-4 py-2">
+                  <input
+                    type="number"
+                    x-model="leg.elevationGain"
+                    min="0"
+                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                  />
+                </td>
+                <td class="px-4 py-2 text-right">
+                  <button
+                    @click="removeLeg(index)"
+                    class="bg-red-200 hover:bg-red-400 text-white px-4 py-2 rounded-md transition"
+                  >
+                    ❌
+                  </button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" class="px-4 py-2 text-right">
+                <button
+                  @click="addLeg()"
+                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
+                >
+                  ➕
+                </button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <h2 class="text-xl font-semibold mb-4 text-green-700">
+          Total:
+          <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>), <span x-text="totalElevationGain">...</span> feet
+          gain.
+        </h2>
+
+        <div class="mt-6">
+          <button @click="clearTrip()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+            Reset
+          </button>
         </div>
-        
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold mb-4 text-green-700">Trip Summary</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-green-50 p-4 rounded-md">
-                    <h3 class="font-medium text-green-800 mb-2">Total Distance</h3>
-                    <p class="text-2xl font-bold text-green-700" x-text="totalDistance.toFixed(1) + ' miles'"></p>
-                </div>
-                <div class="bg-green-50 p-4 rounded-md">
-                    <h3 class="font-medium text-green-800 mb-2">Total Elevation Gain</h3>
-                    <p class="text-2xl font-bold text-green-700" x-text="totalElevationGain + ' ft'"></p>
-                </div>
-                <div class="bg-green-50 p-4 rounded-md">
-                    <h3 class="font-medium text-green-800 mb-2">Method Breakdown</h3>
-                    <div x-html="methodBreakdown"></div>
-                </div>
-            </div>
-            
-            <div class="mt-6">
-                <button @click="saveTrip()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition mr-2">Save Trip</button>
-                <button @click="clearTrip()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition">Clear All</button>
-            </div>
-        </div>
+      </div>
     </div>
 
     <script>
-        function tripPlanner() {
-            return {
-                tripName: "My Hiking Adventure",
-                legs: [
-                    { method: 'hike', distance: 3.5, elevationGain: 750 },
-                    { method: 'float', distance: 2.0, elevationGain: 0 }
-                ],
-                
-                addLeg() {
-                    this.legs.push({ method: 'hike', distance: 0, elevationGain: 0 });
-                },
-                
-                removeLeg(index) {
-                    this.legs.splice(index, 1);
-                },
-                
-                get totalDistance() {
-                    return this.legs.reduce((sum, leg) => sum + parseFloat(leg.distance || 0), 0);
-                },
-                
-                get totalElevationGain() {
-                    return this.legs.reduce((sum, leg) => sum + parseInt(leg.elevationGain || 0), 0);
-                },
-                
-                get methodBreakdown() {
-                    const methods = {};
-                    this.legs.forEach(leg => {
-                        if (!methods[leg.method]) {
-                            methods[leg.method] = 0;
-                        }
-                        methods[leg.method] += parseFloat(leg.distance || 0);
-                    });
-                    
-                    let html = '';
-                    for (const [method, distance] of Object.entries(methods)) {
-                        const methodName = method.charAt(0).toUpperCase() + method.slice(1);
-                        html += `<div class="text-sm mb-1"><span class="font-medium">${methodName}:</span> ${distance.toFixed(1)} miles</div>`;
-                    }
-                    return html;
-                },
-                
-                saveTrip() {
-                    const tripData = {
-                        name: this.tripName,
-                        legs: this.legs,
-                        totalDistance: this.totalDistance,
-                        totalElevationGain: this.totalElevationGain
-                    };
-                    
-                    localStorage.setItem('savedTrip', JSON.stringify(tripData));
-                    alert('Trip saved successfully!');
-                },
-                
-                clearTrip() {
-                    if (confirm('Are you sure you want to clear all trip data?')) {
-                        this.tripName = "My Hiking Adventure";
-                        this.legs = [];
-                        localStorage.removeItem('savedTrip');
-                    }
-                },
-                
-                init() {
-                    const savedTrip = localStorage.getItem('savedTrip');
-                    if (savedTrip) {
-                        const tripData = JSON.parse(savedTrip);
-                        this.tripName = tripData.name;
-                        this.legs = tripData.legs;
-                    }
-                }
+      function tripPlanner() {
+        return {
+          tripName: "My Hiking Adventure",
+          legs: [
+            { method: "hike", distance: 3.5, elevationGain: 750 },
+            { method: "float", distance: 2.0, elevationGain: 0 },
+          ],
+
+          addLeg() {
+            this.legs.push({ method: "hike", distance: 0, elevationGain: 0 });
+          },
+
+          removeLeg(index) {
+            this.legs.splice(index, 1);
+          },
+
+          get totalDistance() {
+            return this.legs.reduce((sum, leg) => sum + parseFloat(leg.distance || 0), 0);
+          },
+
+          get totalElevationGain() {
+            return this.legs.reduce((sum, leg) => sum + parseInt(leg.elevationGain || 0), 0);
+          },
+
+          get methodBreakdown() {
+            const methods = {};
+            this.legs.forEach((leg) => {
+              if (!methods[leg.method]) {
+                methods[leg.method] = 0;
+              }
+              methods[leg.method] += parseFloat(leg.distance || 0);
+            });
+
+            let breakdown = [];
+            for (const [method, distance] of Object.entries(methods)) {
+              const methodName = method.charAt(0).toUpperCase() + method.slice(1);
+              breakdown.push(`${distance.toFixed(1)} ${methodName.toLowerCase()}`);
+            }
+            return breakdown.join(", ");
+          },
+
+          saveTrip() {
+            const tripData = {
+              name: this.tripName,
+              legs: this.legs,
+              totalDistance: this.totalDistance,
+              totalElevationGain: this.totalElevationGain,
             };
-        }
+
+            localStorage.setItem("savedTrip", JSON.stringify(tripData));
+            alert("Trip saved successfully!");
+          },
+
+          clearTrip() {
+            if (confirm("Are you sure you want to clear all trip data?")) {
+              this.legs = [];
+              localStorage.removeItem("savedTrip");
+            }
+          },
+
+          init() {
+            const savedTrip = localStorage.getItem("savedTrip");
+            if (savedTrip) {
+              const tripData = JSON.parse(savedTrip);
+              this.tripName = tripData.name;
+              this.legs = tripData.legs;
+            }
+          },
+        };
+      }
     </script>
-</body>
+  </body>
 </html>
