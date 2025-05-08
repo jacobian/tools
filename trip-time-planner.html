@@ -8,68 +8,76 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.6/htmx.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style type="text/tailwindcss">
-      table thead tr { @apply bg-green-100 text-center; }
+      table thead tr {
+        @apply bg-green-100 text-center;
+      }
+      table th, table td {
+        @apply p-2;
+      }
+      input[type="number"] {
+        @apply w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500;
+      }
+      select {
+        @apply w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500;
+      }
+      .btn {
+        @apply px-4 py-2 rounded-md transition text-white;
+      }
+      .btn-green {
+        @apply bg-green-500 hover:bg-green-600;
+      }
+      .btn-red {
+        @apply bg-red-500 hover:bg-red-600;
+      }
+      .btn-delete {
+        @apply bg-red-200 hover:bg-red-400;
+      }
+      .section-container {
+        @apply bg-white rounded-lg shadow-lg p-6;
+      }
+      .section-heading {
+        @apply text-xl font-semibold text-green-700;
+      }
+      .zebra-row {
+        @apply even:bg-gray-50 odd:bg-white;
+      }
     </style>
   </head>
   <body class="bg-gray-100 font-sans">
     <div class="container mx-auto max-w-4xl px-4 py-8" x-data="tripPlanner()">
       <h1 class="text-2xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
-      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <div class="section-container mb-6">
         <table class="w-full mb-4">
           <thead>
             <tr>
-              <th class="px-4 py-2"></th>
-              <th class="px-4 py-2">Method</th>
-              <th class="px-4 py-2">Distance (mil)</th>
-              <th class="px-4 py-2">Gain (ft)</th>
-              <th class="px-4 py-2">Est Time</th>
-              <th class="px-4 py-2"></th>
+              <th></th>
+              <th>Method</th>
+              <th>Distance (mil)</th>
+              <th>Gain (ft)</th>
+              <th>Est Time</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <template x-for="(leg, index) in legs" :key="index">
-              <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
-                <td class="px-4 py-2" x-text="index + 1"></td>
-                <td class="px-4 py-2">
-                  <select
-                    x-model="leg.method"
-                    @change="saveTrip()"
-                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-                  >
+              <tr class="zebra-row">
+                <td x-text="index + 1"></td>
+                <td>
+                  <select x-model="leg.method" @change="saveTrip()" class="">
                     <template x-for="method in travelMethods" :key="method.name">
                       <option :value="method.name" x-text="method.name" :selected="leg.method === method.name"></option>
                     </template>
                   </select>
                 </td>
-                <td class="px-4 py-2">
-                  <input
-                    type="number"
-                    x-model="leg.distance"
-                    @input="saveTrip()"
-                    min="0"
-                    step="0.1"
-                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
+                <td>
+                  <input type="number" x-model="leg.distance" @input="saveTrip()" min="0" step="0.1" class="" />
                 </td>
-                <td class="px-4 py-2">
-                  <input
-                    type="number"
-                    x-model="leg.elevationGain"
-                    @input="saveTrip()"
-                    min="0"
-                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
-                  />
+                <td>
+                  <input type="number" x-model="leg.elevationGain" @input="saveTrip()" min="0" class="" />
                 </td>
-                <td class="px-4 py-2">
-                  <span x-text="calculateLegTime(leg).toFixed(1)"></span> hours
-                </td>
+                <td><span x-text="calculateLegTime(leg).toFixed(1)"></span> hours</td>
                 <td class="px-4 py-2 text-right">
-                  <button
-                    @click="removeLeg(index)"
-                    class="bg-red-200 hover:bg-red-400 text-white px-4 py-2 rounded-md transition"
-                  >
-                    ❌
-                  </button>
+                  <button @click="removeLeg(index)" class="btn btn-delete">❌</button>
                 </td>
               </tr>
             </template>
@@ -77,72 +85,65 @@
           <tfoot>
             <tr>
               <td colspan="6" class="px-4 py-2 text-right">
-                <button
-                  @click="addLeg()"
-                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
-                >
-                  ➕
-                </button>
+                <button @click="addLeg()" class="btn btn-green">➕</button>
               </td>
             </tr>
           </tfoot>
         </table>
 
         <div class="flex items-center">
-          <h2 class="text-xl font-semibold text-green-700 flex-1">
+          <h2 class="section-heading flex-1">
             Total:
             <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>),
             <span x-text="totalElevationGain">...</span> feet gain,
             <span x-text="totalTime.toFixed(1)">...</span> hours.
           </h2>
-  
+
           <div>
-            <button @click="clearTrip()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
-              Reset All
-            </button>
-          </div>  
+            <button @click="clearTrip()" class="btn btn-red">Reset All</button>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-xl font-semibold mb-4 text-green-700">Travel Methods</h2>
+      <div class="section-container">
+        <h2 class="section-heading mb-4">Travel Methods</h2>
         <table class="w-full mb-4">
           <thead>
             <tr>
-              <th class="px-4 py-2">Name</th>
-              <th class="px-4 py-2">Minutes per Mile</th>
-              <th class="px-4 py-2">Minutes per 1000 ft Gain</th>
-              <th class="px-4 py-2"></th>
+              <th>Name</th>
+              <th>Minutes per Mile</th>
+              <th>Minutes per 1000 ft Gain</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <template x-for="(method, index) in travelMethods" :key="index">
-              <tr :class="index % 2 === 0 ? 'bg-gray-50' : 'bg-white'">
-                <td class="px-4 py-2" x-text="method.name"></td>
-                <td class="px-4 py-2">
+              <tr class="zebra-row">
+                <td x-text="method.name"></td>
+                <td>
                   <input
                     type="number"
                     x-model="method.minutesPerMile"
                     @input="saveTrip()"
                     min="0"
                     step="0.1"
-                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                    class=""
                   />
                 </td>
-                <td class="px-4 py-2">
+                <td>
                   <input
                     type="number"
                     x-model="method.minutesPer1000ft"
                     @input="saveTrip()"
                     min="0"
                     step="0.1"
-                    class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
+                    class=""
                   />
                 </td>
                 <td class="px-4 py-2 text-right">
                   <button
                     @click="removeMethod(index)"
-                    class="bg-red-200 hover:bg-red-400 text-white px-4 py-2 rounded-md transition"
+                    class="btn btn-delete"
                     :disabled="travelMethods.length <= 1"
                     :class="{'opacity-50 cursor-not-allowed': travelMethods.length <= 1}"
                   >
@@ -155,12 +156,7 @@
           <tfoot>
             <tr>
               <td colspan="4" class="px-4 py-2 text-right">
-                <button
-                  @click="addMethod()"
-                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
-                >
-                  ➕
-                </button>
+                <button @click="addMethod()" class="btn btn-green">➕</button>
               </td>
             </tr>
           </tfoot>
@@ -171,16 +167,20 @@
     <script>
       function tripPlanner() {
         return {
-          legs: [
+          
+          defaultLegs: [
             { method: "hike", distance: 3.5, elevationGain: 750 },
             { method: "float", distance: 2.0, elevationGain: 0 },
+            { method: "bushwhack", distance: 1.2, elevationGain: 500 },
           ],
 
-          travelMethods: [
+          defaultTravelMethods: [
             { name: "hike", minutesPerMile: 20, minutesPer1000ft: 30 },
             { name: "float", minutesPerMile: 15, minutesPer1000ft: 0 },
-            { name: "xc", minutesPerMile: 30, minutesPer1000ft: 45 },
+            { name: "bushwhack", minutesPerMile: 40, minutesPer1000ft: 60 },
           ],
+          legs: [],
+          travelMethods: [],
 
           addLeg() {
             // Default to first travel method in the list
@@ -246,13 +246,14 @@
           },
 
           calculateLegTime(leg) {
-            const method = this.travelMethods.find(m => m.name === leg.method);
+            const method = this.travelMethods.find((m) => m.name === leg.method);
             if (!method) return 0;
             const distanceTime = parseFloat(leg.distance || 0) * parseFloat(method.minutesPerMile || 0);
-            const elevationTime = parseFloat(leg.elevationGain || 0) / 1000 * parseFloat(method.minutesPer1000ft || 0);
-            return ((distanceTime + elevationTime) / 60);
+            const elevationTime =
+              (parseFloat(leg.elevationGain || 0) / 1000) * parseFloat(method.minutesPer1000ft || 0);
+            return (distanceTime + elevationTime) / 60;
           },
-          
+
           get totalTime() {
             return this.legs.reduce((sum, leg) => sum + this.calculateLegTime(leg), 0);
           },
@@ -267,16 +268,8 @@
 
           clearTrip() {
             if (confirm("Are you sure you want to clear all trip data?")) {
-              this.legs = [
-                { method: "hike", distance: 3.5, elevationGain: 750 },
-                { method: "float", distance: 2.0, elevationGain: 0 },
-              ];
-              // Reset travel methods to defaults
-              this.travelMethods = [
-                { name: "hike", minutesPerMile: 20, minutesPer1000ft: 30 },
-                { name: "float", minutesPerMile: 15, minutesPer1000ft: 0 },
-                { name: "xc", minutesPerMile: 30, minutesPer1000ft: 45 },
-              ];
+              this.legs = this.defaultLegs;
+              this.travelMethods = this.defaultTravelMethods;
               localStorage.removeItem("savedTrip");
             }
           },
@@ -285,13 +278,15 @@
             const savedTrip = localStorage.getItem("savedTrip");
             if (savedTrip) {
               const tripData = JSON.parse(savedTrip);
-
               if (tripData.travelMethods) {
                 this.travelMethods = tripData.travelMethods;
               }
               if (tripData.legs) {
                 this.legs = tripData.legs;
               }
+            } else {
+              this.legs = this.defaultLegs;
+              this.travelMethods = this.defaultTravelMethods;
             }
           },
         };
