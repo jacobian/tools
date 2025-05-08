@@ -7,19 +7,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.6/htmx.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      table thead tr { @apply bg-green-100 text-center; }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans">
-    <div class="container mx-auto px-4 py-8" x-data="tripPlanner()">
-      <h1 class="text-3xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
+    <div class="container mx-auto max-w-4xl px-4 py-8" x-data="tripPlanner()">
+      <h1 class="text-2xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
       <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
         <table class="w-full mb-4">
           <thead>
-            <tr class="bg-green-100 text-left">
-              <th class="px-4 py-2 rounded-tl-md">Leg #</th>
-              <th class="px-4 py-2">Travel Method</th>
-              <th class="px-4 py-2">Distance (miles)</th>
-              <th class="px-4 py-2">Elevation Gain (ft)</th>
-              <th class="px-4 py-2 rounded-tr-md">Actions</th>
+            <tr>
+              <th class="px-4 py-2"></th>
+              <th class="px-4 py-2">Method</th>
+              <th class="px-4 py-2">Distance (mil)</th>
+              <th class="px-4 py-2">Gain (ft)</th>
+              <th class="px-4 py-2">Est Time</th>
+              <th class="px-4 py-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -33,7 +37,7 @@
                     class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                   >
                     <template x-for="method in travelMethods" :key="method.name">
-                      <option :value="method.name" x-text="method.name"></option>
+                      <option :value="method.name" x-text="method.name" :selected="leg.method === method.name"></option>
                     </template>
                   </select>
                 </td>
@@ -56,6 +60,9 @@
                     class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
                   />
                 </td>
+                <td class="px-4 py-2">
+                  <span x-text="calculateLegTime(leg).toFixed(1)"></span> hours
+                </td>
                 <td class="px-4 py-2 text-right">
                   <button
                     @click="removeLeg(index)"
@@ -69,7 +76,7 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="5" class="px-4 py-2 text-right">
+              <td colspan="6" class="px-4 py-2 text-right">
                 <button
                   @click="addLeg()"
                   class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
@@ -81,30 +88,31 @@
           </tfoot>
         </table>
 
-        <h2 class="text-xl font-semibold mb-4 text-green-700">
-          Total:
-          <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>),
-          <span x-text="totalElevationGain">...</span> feet gain.
-        </h2>
-
-        <div class="mt-6">
-          <button @click="clearTrip()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
-            Reset
-          </button>
+        <div class="flex items-center">
+          <h2 class="text-xl font-semibold text-green-700 flex-1">
+            Total:
+            <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>),
+            <span x-text="totalElevationGain">...</span> feet gain,
+            <span x-text="totalTime.toFixed(1)">...</span> hours.
+          </h2>
+  
+          <div>
+            <button @click="clearTrip()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+              Reset All
+            </button>
+          </div>  
         </div>
       </div>
 
-      <!-- Travel Methods Table -->
       <div class="bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-xl font-semibold mb-4 text-green-700">Travel Methods</h2>
-
         <table class="w-full mb-4">
           <thead>
-            <tr class="bg-green-100 text-left">
-              <th class="px-4 py-2 rounded-tl-md">Method Name</th>
+            <tr>
+              <th class="px-4 py-2">Name</th>
               <th class="px-4 py-2">Minutes per Mile</th>
               <th class="px-4 py-2">Minutes per 1000 ft Gain</th>
-              <th class="px-4 py-2 rounded-tr-md">Actions</th>
+              <th class="px-4 py-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -235,6 +243,18 @@
               breakdown.push(`${distance.toFixed(1)} ${method.toLowerCase()}`);
             }
             return breakdown.join(", ");
+          },
+
+          calculateLegTime(leg) {
+            const method = this.travelMethods.find(m => m.name === leg.method);
+            if (!method) return 0;
+            const distanceTime = parseFloat(leg.distance || 0) * parseFloat(method.minutesPerMile || 0);
+            const elevationTime = parseFloat(leg.elevationGain || 0) / 1000 * parseFloat(method.minutesPer1000ft || 0);
+            return ((distanceTime + elevationTime) / 60);
+          },
+          
+          get totalTime() {
+            return this.legs.reduce((sum, leg) => sum + this.calculateLegTime(leg), 0);
           },
 
           saveTrip() {
