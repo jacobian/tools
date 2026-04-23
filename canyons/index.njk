@@ -16,6 +16,14 @@ containerClass: max-w-7xl
   .expedition-name { @apply font-semibold text-red-900 block; }
 </style>
 
+{% macro canyon_name(name, link) %}
+  {% if link %}
+    <a href="{{ link }}"><strong>{{ name }}</strong></a>
+  {% else %}
+    <strong>{{ name }}</strong>
+  {% endif %}
+{% endmacro %}
+
 <h1>Canyon Log</h1>
 
 <table>
@@ -36,7 +44,7 @@ containerClass: max-w-7xl
       {% if item.type == "day trip" %}
         <tr class="{{ stripe }} hover:bg-red-50">
           <td class="date-cell">{{ item.display_date if item.display_date else '<span class="empty">—</span>' | safe }}</td>
-          <td><strong>{{ item.canyon }}</strong></td>
+          <td>{{ canyon_name(item.canyon, item.link) }}</td>
           <td>{{ item.region }}</td>
           <td><span class="class">{{ item.class }}</span></td>
           <td>{{ item.flow if item.flow else '<span class="empty">—</span>' | safe }}</td>
@@ -52,7 +60,7 @@ containerClass: max-w-7xl
                 <span class="expedition-name">{{ item.name }}</span>
               </td>
             {% endif %}
-            <td><strong>{{ c.canyon }}</strong></td>
+            <td>{{ canyon_name(c.canyon, c.link) }}</td>
             <td>{{ c.region }}</td>
             <td><span class="class">{{ c.class }}</span></td>
             <td>{{ c.flow if c.flow else '<span class="empty">—</span>' | safe }}</td>
