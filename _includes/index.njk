@@ -24,7 +24,7 @@
     </style>
   </head>
   <body class="bg-gray-100 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="container mx-auto px-4 py-8 {{ containerClass if containerClass else 'max-w-4xl' }}">
       <main>{{ content | safe }}</main>
     </div>
   </body>

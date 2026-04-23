@@ -1,0 +1,644 @@
+[
+  {
+    "type": "expedition",
+    "name": "GC: Salt + Big",
+    "display_date": "February 2026",
+    "sort_date": "2026-02-21",
+    "canyons": [
+      {
+        "canyon": "salt trail",
+        "ropewiki": null,
+        "region": "Grand Canyon",
+        "class": "B",
+        "flow": "\u2014",
+        "notes": "the openning pothole is an amazing feature, loved watching folks solve it. rest of the canyon pretty easy",
+        "display_date": "February 2026",
+        "sort_date": "2026-02-21"
+      },
+      {
+        "canyon": "big canyon",
+        "ropewiki": null,
+        "region": "Grand Canyon",
+        "class": "B",
+        "flow": "\u2014",
+        "notes": "spectacular. spring room is terrific, amazing scenery. LCR was running blue!",
+        "display_date": "February 2026",
+        "sort_date": "2026-02-21"
+      }
+    ]
+  },
+  {
+    "canyon": "weeping springs",
+    "ropewiki": null,
+    "region": "Vegas",
+    "class": "A",
+    "flow": "\u2014",
+    "notes": "lovely and straightforward",
+    "display_date": "February 2026",
+    "sort_date": "2026-02-19",
+    "type": "day trip"
+  },
+  {
+    "canyon": "mesatchee",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "pnw rody - assistant leader. amazing. lovely canyon, fantastic group - i wasn't a \"leader\" in any sense, everything was super talented. i found a much better exit than the scree slope of death: continue downstream for about 5-10 mins, to find a prominant ridge running directly up from the creek. following the spine of the ridge the rock is stable enough to not be a fall hazard until maybe the last 25' which is loose but fine.",
+    "display_date": "August 2025",
+    "sort_date": "2025-08-16",
+    "type": "day trip"
+  },
+  {
+    "canyon": "davis",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": "pnw rondy - assistant leader. slow day, team seemed to want to be passengers rather than active, charlie and I rigged everything except maybe one drop. spent almost an hour at the intermediate station below the big drop getting people through. wasn't bad, had fun, just slow. flow was perfect for this group, a little pushy but not spicy",
+    "display_date": "August 2025",
+    "sort_date": "2025-08-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "olallie",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "pnw rondy - assistant leader. mixed team - super accomplished, but mostly dry. had a minor problem on r1 when the dude from AZ rigged tail up and tossed the bag down before we could say anything, had to deal with some coils of rope in the pool which was annoying but not dangerous. i love this canyon, think it's beautiful, but other people found the creekwalking long and annoying and there was some grumbling by the end. still one of my favs though. really fun to repeat a creek as a leader this time. flow was noticibly lower than last year, which made the crux not crux-y at all",
+    "display_date": "August 2025",
+    "sort_date": "2025-08-14",
+    "type": "day trip"
+  },
+  {
+    "canyon": "parkett",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "the big rap is one of the most lovely things I've ever seen. incredible on a warm day - we could feel hot air rising up the canyon to the slot at the top of the big rap. but I can see why it'd be a problem on a cold day! ",
+    "display_date": "August 2025",
+    "sort_date": "2025-08-09",
+    "type": "day trip"
+  },
+  {
+    "canyon": "quartzville",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "a great second creek of the day, but not a destination in its own right. mostly a creek walk (though, a nice one) with just a couple of nusciance raps. possibly bypass-able by a really strong downclimber? I accidentally drove us to the upper-most drop-in, that's not really worth it; take the shortcut next time.",
+    "display_date": "August 2025",
+    "sort_date": "2025-08-09",
+    "type": "day trip"
+  },
+  {
+    "canyon": "fir",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": "mazamas campout - just me and alex, we zoomed through, car to car in like two hours, hella fun. did the \"short and tough\" exit, which wasn't that tough at all. ",
+    "display_date": "July 2025",
+    "sort_date": "2025-07-20",
+    "type": "day trip"
+  },
+  {
+    "canyon": "whitehorse (main)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-high",
+    "notes": "mazamas campout, assistant leader. sort of sad we didn't do full, but most of us had done full fulton yesterday and didn't want another really long day. none of us had done this creek before, i really enjoyed working things out on the fly - and felt like a proper leader here, and i work well with wim. flow was surprisngly high - and cold! - any more would have been difficult. as it was some people struggled a bit, i ended up going first on nearly every rap to give people pointers. unfortuntely we stuck a rope on the final rap - even more embarasing because brian had warned us of precisely this spot. had to cut it finally, only lost maybe 20-30' but still, annoying. watch that final pull!",
+    "display_date": "July 2025",
+    "sort_date": "2025-07-19",
+    "type": "day trip"
+  },
+  {
+    "canyon": "fulton (full)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low-mod",
+    "notes": "mazmas campout, assistand leader. fantastic, full fulton is a long day but lovely. stopped for a proper lunch on a sunny beach in the middle section, what a treat to be warm and relaxed in the middle of a canyon. lower is definately the highlight, more fun jumps and slides, but i'm really glad we did full, the middle section is just so scenic. the exit is tough, took us nearly a full hour and most people were pretty smoked.",
+    "display_date": "July 2025",
+    "sort_date": "2025-07-18",
+    "type": "day trip"
+  },
+  {
+    "canyon": "rock",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "just me and win, fast and easy. tons of trash, unfortunately, going to be glorious after the wcc cleanup in a couple of days",
+    "display_date": "July 2025",
+    "sort_date": "2025-07-17",
+    "type": "day trip"
+  },
+  {
+    "canyon": "duncan",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "mazamas class trip - assistant leader. everyone's first canyon, was great helping them debug. warm and sunny day, a treat to be warm in a canyon",
+    "display_date": "June 2025",
+    "sort_date": "2025-06-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "stafford",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "mazamas class trip - assistant leader. the new bolts on r9 turn it into a rebelay - great oportunity for practice. took a very long time getting all the students through because we had each student practice rigging the rebeley station as an exercise. good choice for practice, bad choice for staying warm, I was shivvering by the time we got the last student through. ",
+    "display_date": "June 2025",
+    "sort_date": "2025-06-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "three corner",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "mazamas leaders/assistants practice trip, did a bunch of messing around with various rescue/assistant scenarios. very fun to do in some light flow, reinforced that doing some of this in heavy flow would be terrible/dangerous/impossible",
+    "display_date": "June 2025",
+    "sort_date": "2025-06-13",
+    "type": "day trip"
+  },
+  {
+    "canyon": "tierdrop",
+    "ropewiki": null,
+    "region": "Moab",
+    "class": "A",
+    "flow": "\u2014",
+    "notes": "unexceptional, but I had an extra day in moab and these seemed low-risk to do solo. pretty easty to do all three in a few hours, I think I was about 5 hours total including a long lunch stop. of the 3 i think tierdrop is the best, r2 and r3 and both quite fun long raps. ropewiki lies, these are all bolted now. a fun day but I wouldn't come just for this.",
+    "display_date": "April 2025",
+    "sort_date": "2025-04-19",
+    "type": "day trip"
+  },
+  {
+    "canyon": "not tierdrop",
+    "ropewiki": null,
+    "region": "Moab",
+    "class": "A",
+    "flow": "\u2014",
+    "notes": null,
+    "display_date": "April 2025",
+    "sort_date": "2025-04-19",
+    "type": "day trip"
+  },
+  {
+    "canyon": "u-turn",
+    "ropewiki": null,
+    "region": "Moab",
+    "class": "A",
+    "flow": "\u2014",
+    "notes": null,
+    "display_date": "April 2025",
+    "sort_date": "2025-04-19",
+    "type": "day trip"
+  },
+  {
+    "type": "expedition",
+    "name": "canyonlands quad trek",
+    "display_date": "April 2025",
+    "sort_date": "2025-04-14",
+    "canyons": [
+      {
+        "canyon": "gooseberry",
+        "ropewiki": null,
+        "region": "Moab",
+        "class": "A",
+        "flow": "\u2014",
+        "notes": "4-day loop of all canyonlands district, mostly hiking with a bit of rapelling and parkrafting. two short raps in gooseberry (found out later there's a walkaround). dropped the pourovers in indian creek (three drops, about 20' each) to scope them out - they go easily, saves time vs the convoluted walkaround. rapped out of horse canyon: just a single 80' drop from a boulder center, very easy. saves a ton of time vs the \"pre horse\" exit and is very elegant.",
+        "display_date": "April 2025",
+        "sort_date": "2025-04-14"
+      },
+      {
+        "canyon": "indian creek",
+        "ropewiki": null,
+        "region": "Moab",
+        "class": "A",
+        "flow": "\u2014",
+        "notes": null,
+        "display_date": "April 2025",
+        "sort_date": "2025-04-14"
+      },
+      {
+        "canyon": "horse canyon exit",
+        "ropewiki": null,
+        "region": "Moab",
+        "class": "A",
+        "flow": "\u2014",
+        "notes": null,
+        "display_date": "April 2025",
+        "sort_date": "2025-04-14"
+      }
+    ]
+  },
+  {
+    "canyon": "duncan",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "high",
+    "notes": "duncan in high flow is something else entirely. honestly was a bit spooked, but trey walked me through it and it went well",
+    "display_date": "March 2025",
+    "sort_date": "2025-03-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "valkyrie",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "really great, I don't know why this isn't run more. would be even better in more flow - come back in feb? might be possible to run even earlier, wonder if it ever gets enough flow to be dangerous - mighjt not",
+    "display_date": "March 2025",
+    "sort_date": "2025-03-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "heater ",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "more of a novelty than anything, did it for the packraft exit. high pay to play, the approach is un-fun and most of the creek is meh. the last rap rocks but isn't worth the squeeze",
+    "display_date": "March 2025",
+    "sort_date": "2025-03-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "triangulation",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "we believe this was the second descent after the first in 2018. lots of improvising - no established anchors. bobsled took some figuring out - glad to have clint and eric along, I would have struggled if I'd been the most experienced there",
+    "display_date": "March 2025",
+    "sort_date": "2025-03-08",
+    "type": "day trip"
+  },
+  {
+    "canyon": "bridal veil",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "practiced ascending on r1",
+    "display_date": "September 2024",
+    "sort_date": "2024-09-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "eagle (lower)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Eric's first Class C, a total blast. Cassie got stung liek 10x by yellow jackets on the exit, only bummer of a great day.",
+    "display_date": "August 2024",
+    "sort_date": "2024-08-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "young",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "the traverse/rap is a great place to practice. next time I'd exit before r4 (or fix a rope and ascend up the side to trail from below r4) - continuing down to the tracks isn't worth the bushwhacking exit.",
+    "display_date": "August 2024",
+    "sort_date": "2024-08-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "hagar",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "pnw rondy. a lovely canyon marred by some crappy team dynamics. one member of the team either lied or overstated their comfort/experience in whitewater, and we ended up contact rescuing them at least twice. needing to keep an eye on them at all times was stressful. felt bad for clint leading this mess; felt good that he trusted me enough to ask me to help out.",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-28",
+    "type": "day trip"
+  },
+  {
+    "canyon": "davis",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "pnw rondy. the leader insisted on using the dry line on upper davis falls which i didn't understand, flow wasn't pushy, and that line didn't seem as fun, the wet line is better. still a five-star canyon though",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-27",
+    "type": "day trip"
+  },
+  {
+    "canyon": "unicorn",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": "pnw rondy. another lovely rainier area creek, the optional extra rap, martha, is a real highlight, but the exit we took (the western side) sucked, really bad thorny bushwhacking. next time try descending to the river and then up to the wonderland, that looks better",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-26",
+    "type": "day trip"
+  },
+  {
+    "canyon": "ollalie",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "pnw rondy. super beautiful, lots of walking on exposed granite, love this creek. got to go first on apparition and needed to do some debugging in the chute getting up onto the root ball. felt collected and confidant even being alone in a fair amount of flow, fun.",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-25",
+    "type": "day trip"
+  },
+  {
+    "canyon": "cussed hollow",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "mazamas campout. wade says this is his favorite in the area but i sorta don't get it. pretty crappy approach and exit and nice but not exceptional canyon. dark is better. had a communication mixup and nearly stuck a rope on r5 but was able to work it out.",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-20",
+    "type": "day trip"
+  },
+  {
+    "canyon": "dark",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "high",
+    "notes": "mazamas campout. spicy in high flow, strong team made it feel easy and safe though",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-19",
+    "type": "day trip"
+  },
+  {
+    "canyon": "eagle (full)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-high?",
+    "notes": "excellent. floating under high bridge, amazing. ",
+    "display_date": "July 2024",
+    "sort_date": "2024-07-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "dog",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mid-high",
+    "notes": "mazamas assistant practice trip. interesting trip - flow was mod or lower at the start, but rained hard all day, and we goofed in the canyon long enough that by the time we got out flow was mod-high verging on high. made the penultimate drop much more challanging than I remembered. good day of practice.",
+    "display_date": "June 2024",
+    "sort_date": "2024-06-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "duncan",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low?",
+    "notes": "mazamas class trips - assistant leader. didn't take notes, assume it was fun.",
+    "display_date": "June 2024",
+    "sort_date": "2024-06-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "stafford",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low?",
+    "notes": "mazamas class trips - assistant leader. didn't take notes, assume it was fun.",
+    "display_date": "June 2024",
+    "sort_date": "2024-06-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "dog",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low?",
+    "notes": "mazamas class trips - assistant leader. didn't take notes, assume it was fun.",
+    "display_date": "June 2024",
+    "sort_date": "2024-06-15",
+    "type": "day trip"
+  },
+  {
+    "type": "expedition",
+    "name": "skurka canyoneering",
+    "display_date": "May 2024",
+    "sort_date": "2024-05-06",
+    "canyons": [
+      {
+        "canyon": "bon appetit",
+        "ropewiki": null,
+        "region": "Escalante",
+        "class": "B",
+        "flow": "\u2014",
+        "notes": " very pretty slot, lots of scrambling and assisted downclimbing, only a few short raps. great intro to escalante-area canyons",
+        "display_date": "May 2024",
+        "sort_date": "2024-05-06"
+      },
+      {
+        "canyon": "top chef",
+        "ropewiki": null,
+        "region": "Escalante",
+        "class": "B",
+        "flow": "\u2014",
+        "notes": "skurka canyoneering trip. like bon appetit, but a big longer and more committing. really fun \"swiss cheese\" formation towards the middle, a choose-your-own-adventure of twisty downclimbs through a holy rock.",
+        "display_date": "May 2024",
+        "sort_date": "2024-05-06"
+      },
+      {
+        "canyon": "neon (full)",
+        "ropewiki": null,
+        "region": "Escalante",
+        "class": "B",
+        "flow": "potholes full",
+        "notes": "started at the very top of the neon drainage, dropped off a cairn into an undocumented (unexplored?) upper nw fork of neon, descending the full drainage. spent the night on the \"island\" formation neart the confluence with the southern fork. super amazing, highlight of the trip for sure. golden cathedral was epic as advertised, though tbh pales in comparison to satisfaction of exploring the whole drainage so completely.",
+        "display_date": "May 2024",
+        "sort_date": "2024-05-06"
+      },
+      {
+        "canyon": "egypt 2",
+        "ropewiki": null,
+        "region": "Escalante",
+        "class": "A",
+        "flow": "\u2014",
+        "notes": "didn't have the rope (or really the desire) for the 300' openning rap, so did the bypass approach. a fun and fine time, some enjoyable narrow squeezing, but not particuarly memorable. but it was on our way (more or less) to complete the loop on our trip, so it made sense to stop by and take a look. ",
+        "display_date": "May 2024",
+        "sort_date": "2024-05-06"
+      }
+    ]
+  },
+  {
+    "canyon": "munra",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod/mod-low",
+    "notes": "great rapells, shitty creek walking. sketchy anchor on r1 (a burnt tree); would be a good place for a bolt some day. probably better done much earlier before the brush has a chance to grow up. try like in feburary some time?",
+    "display_date": "May 2024",
+    "sort_date": "2024-05-03",
+    "type": "day trip"
+  },
+  {
+    "canyon": "parker (upper)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "ice!",
+    "notes": "parker after a snow/ice storm, did this mostly for the novelty. walked then snowshoed up the road from connor's camp, descended the creek, which was almost entirely a sheet of ice, in microspikes. sort of dumb, sort of amazing, lots of fun.",
+    "display_date": "January 2024",
+    "sort_date": "2024-01-04",
+    "type": "day trip"
+  },
+  {
+    "canyon": "bridal veil",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "?",
+    "notes": "much better this time, getting more confidant about bigger drops. ",
+    "display_date": "October 2023",
+    "sort_date": "2023-10-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "memaloose",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": "mem is fantastic. the 200' rap on clack was my best long rap yet, but still struggling with getting spooked by the height. need to work on this",
+    "display_date": "October 2023",
+    "sort_date": "2023-10-09",
+    "type": "day trip"
+  },
+  {
+    "canyon": "parker (upper)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "very easy and kinda meh, but good place to practice",
+    "display_date": "October 2023",
+    "sort_date": "2023-10-01",
+    "type": "day trip"
+  },
+  {
+    "canyon": "bridal veil",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "?",
+    "notes": "hard for me: got spooked and used too much friction on long free hang, didn't go well. want to do this again",
+    "display_date": "September 2023",
+    "sort_date": "2023-09-24",
+    "type": "day trip"
+  },
+  {
+    "canyon": "dark",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "mazmas campout. redemption from getting skunked a month ago. super lovely, long but easy approach and easy exit, five stars",
+    "display_date": "July 2023",
+    "sort_date": "2023-07-23",
+    "type": "day trip"
+  },
+  {
+    "canyon": "davis",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "?",
+    "notes": "mazamas campout. i see why everyone raves about davis, lovely and very fun",
+    "display_date": "July 2023",
+    "sort_date": "2023-07-22",
+    "type": "day trip"
+  },
+  {
+    "canyon": "panther (rainier)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "?",
+    "notes": "mazamas campout. super fun probably my favorite yet. short and scenic and fun",
+    "display_date": "July 2023",
+    "sort_date": "2023-07-21",
+    "type": "day trip"
+  },
+  {
+    "canyon": "summit (middle)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "?",
+    "notes": "mazamas campout. dropped in from a tree just above r2, left ropes up at r2 and r3 so we could run laps. did 3 laps, last one in the mostly-dark by headlamp - very very cool experience and practice",
+    "display_date": "July 2023",
+    "sort_date": "2023-07-20",
+    "type": "day trip"
+  },
+  {
+    "canyon": "hopkins",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low?",
+    "notes": "mazamas class trip #2. super fun, hanging rebelay was a huge confidance booster",
+    "display_date": "June 2023",
+    "sort_date": "2023-06-24",
+    "type": "day trip"
+  },
+  {
+    "canyon": "dark (bailed)",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "high?",
+    "notes": "bailed before R2, too high flow for class",
+    "display_date": "June 2023",
+    "sort_date": "2023-06-24",
+    "type": "day trip"
+  },
+  {
+    "canyon": "dog",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low?",
+    "notes": "mazamas class trip #1",
+    "display_date": "June 2023",
+    "sort_date": "2023-06-18",
+    "type": "day trip"
+  },
+  {
+    "canyon": "sf clackamas",
+    "ropewiki": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": null,
+    "display_date": null,
+    "sort_date": "0000-01-01",
+    "type": "day trip"
+  }
+]

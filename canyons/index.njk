@@ -1,0 +1,68 @@
+---
+title: Canyon Log
+layout: index.njk
+containerClass: max-w-7xl
+---
+<style type="text/tailwindcss">
+  table { @apply w-full text-sm border-collapse mt-4; }
+  thead { @apply bg-red-900 text-white; }
+  th { @apply px-3 py-2 text-left font-semibold; }
+  tbody tr { @apply border-b border-gray-200; }
+  td { @apply px-3 py-2 text-gray-800 align-top; }
+  .class { @apply font-mono font-bold text-red-800; }
+  .empty { @apply text-gray-400 italic; }
+  .date-cell { @apply text-gray-500 whitespace-nowrap; }
+  .expedition-cell { @apply align-top; }
+  .expedition-name { @apply font-semibold text-red-900 block; }
+</style>
+
+<h1>Canyon Log</h1>
+
+<p>{{ canyons | length }} trips logged.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Canyon</th>
+      <th>Region</th>
+      <th>Class</th>
+      <th>Flow</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in canyons %}
+      {% set stripe = "bg-stone-50" if loop.index % 2 == 0 else "bg-white" %}
+
+      {% if item.type == "day trip" %}
+        <tr class="{{ stripe }} hover:bg-red-50">
+          <td class="date-cell">{{ item.display_date if item.display_date else '<span class="empty">—</span>' | safe }}</td>
+          <td><strong>{{ item.canyon }}</strong></td>
+          <td>{{ item.region }}</td>
+          <td><span class="class">{{ item.class }}</span></td>
+          <td>{{ item.flow if item.flow else '<span class="empty">—</span>' | safe }}</td>
+          <td>{{ item.notes if item.notes else '' }}</td>
+        </tr>
+
+      {% else %}
+        {% for c in item.canyons %}
+          <tr class="{{ stripe }} hover:bg-red-50">
+            {% if loop.first %}
+              <td class="date-cell expedition-cell" rowspan="{{ item.canyons | length }}">
+                {{ item.display_date if item.display_date else '<span class="empty">—</span>' | safe }}
+                <span class="expedition-name">{{ item.name }}</span>
+              </td>
+            {% endif %}
+            <td><strong>{{ c.canyon }}</strong></td>
+            <td>{{ c.region }}</td>
+            <td><span class="class">{{ c.class }}</span></td>
+            <td>{{ c.flow if c.flow else '<span class="empty">—</span>' | safe }}</td>
+            <td>{{ c.notes if c.notes else '' }}</td>
+          </tr>
+        {% endfor %}
+
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
