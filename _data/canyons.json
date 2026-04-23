@@ -1,13 +1,13 @@
 [
   {
     "type": "expedition",
-    "name": "GC: Salt + Big",
+    "name": "Grand Canyon: Salt & Big",
     "display_date": "February 2026",
     "sort_date": "2026-02-21",
     "canyons": [
       {
-        "canyon": "salt trail",
-        "ropewiki": null,
+        "canyon": "Salt Trail",
+        "link": "https://ropewiki.com/Salt_Trail_Canyon",
         "region": "Grand Canyon",
         "class": "B",
         "flow": "\u2014",
@@ -16,8 +16,8 @@
         "sort_date": "2026-02-21"
       },
       {
-        "canyon": "big canyon",
-        "ropewiki": null,
+        "canyon": "Big Canyon",
+        "link": "https://ropewiki.com/Big_Canyon",
         "region": "Grand Canyon",
         "class": "B",
         "flow": "\u2014",
@@ -28,8 +28,8 @@
     ]
   },
   {
-    "canyon": "weeping springs",
-    "ropewiki": null,
+    "canyon": "Weeping Springs",
+    "link": "https://ropewiki.com/Weeping_Springs_and_Bighorn_Canyons_Loop",
     "region": "Vegas",
     "class": "A",
     "flow": "\u2014",
@@ -39,8 +39,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "mesatchee",
-    "ropewiki": null,
+    "canyon": "Mesatchee",
+    "link": "https://ropewiki.com/Mesatchee_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -50,8 +50,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "davis",
-    "ropewiki": null,
+    "canyon": "Davis",
+    "link": "https://ropewiki.com/Davis_Creek_Canyon",
     "region": "PNW",
     "class": "C",
     "flow": "mod-low",
@@ -61,8 +61,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "olallie",
-    "ropewiki": null,
+    "canyon": "Olallie",
+    "link": "https://ropewiki.com/Olallie_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -72,8 +72,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "parkett",
-    "ropewiki": null,
+    "canyon": "Parkett",
+    "link": "https://ropewiki.com/Parkett_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -83,8 +83,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "quartzville",
-    "ropewiki": null,
+    "canyon": "Quartzville",
+    "link": "https://ropewiki.com/Quartzville_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -94,8 +94,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "fir",
-    "ropewiki": null,
+    "canyon": "Fir",
+    "link": "https://ropewiki.com/Fir_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod-low",
@@ -105,8 +105,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "whitehorse (main)",
-    "ropewiki": null,
+    "canyon": "Whitehorse (Main)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "mod-high",
@@ -116,8 +116,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "fulton (full)",
-    "ropewiki": null,
+    "canyon": "Fulton (Full)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "low-mod",
@@ -127,8 +127,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "rock",
-    "ropewiki": null,
+    "canyon": "Rock",
+    "link": "https://ropewiki.com/Rock_Creek_%28Olympic_Peninsula%29",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -138,8 +138,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "duncan",
-    "ropewiki": null,
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -149,8 +149,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "stafford",
-    "ropewiki": null,
+    "canyon": "Stafford",
+    "link": "https://ropewiki.com/Stafford_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -160,8 +160,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "three corner",
-    "ropewiki": null,
+    "canyon": "Three Corner",
+    "link": "https://ropewiki.com/Three_Corner_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -171,8 +171,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "tierdrop",
-    "ropewiki": null,
+    "canyon": "Tierdrop",
+    "link": "https://ropewiki.com/Tierdrop_Canyon",
     "region": "Moab",
     "class": "A",
     "flow": "\u2014",
@@ -182,8 +182,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "not tierdrop",
-    "ropewiki": null,
+    "canyon": "Not Tierdrop",
+    "link": "https://ropewiki.com/Not_Tierdrop_Canyon",
     "region": "Moab",
     "class": "A",
     "flow": "\u2014",
@@ -193,8 +193,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "u-turn",
-    "ropewiki": null,
+    "canyon": "U-Turn",
+    "link": "https://ropewiki.com/U-Turn_Canyon",
     "region": "Moab",
     "class": "A",
     "flow": "\u2014",
@@ -210,8 +210,8 @@
     "sort_date": "2025-04-14",
     "canyons": [
       {
-        "canyon": "gooseberry",
-        "ropewiki": null,
+        "canyon": "Gooseberry",
+        "link": null,
         "region": "Moab",
         "class": "A",
         "flow": "\u2014",
@@ -220,8 +220,8 @@
         "sort_date": "2025-04-14"
       },
       {
-        "canyon": "indian creek",
-        "ropewiki": null,
+        "canyon": "Indian Creek",
+        "link": null,
         "region": "Moab",
         "class": "A",
         "flow": "\u2014",
@@ -230,8 +230,8 @@
         "sort_date": "2025-04-14"
       },
       {
-        "canyon": "horse canyon exit",
-        "ropewiki": null,
+        "canyon": "Horse Canyon Exit",
+        "link": null,
         "region": "Moab",
         "class": "A",
         "flow": "\u2014",
@@ -242,8 +242,8 @@
     ]
   },
   {
-    "canyon": "duncan",
-    "ropewiki": null,
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "high",
@@ -253,8 +253,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "valkyrie",
-    "ropewiki": null,
+    "canyon": "Valkyrie",
+    "link": "https://ropewiki.com/Valkyrie_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -264,8 +264,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "heater ",
-    "ropewiki": null,
+    "canyon": "Heater ",
+    "link": "https://ropewiki.com/Heater_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -275,8 +275,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "triangulation",
-    "ropewiki": null,
+    "canyon": "Triangulation",
+    "link": "https://ropewiki.com/Triangulation_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -286,8 +286,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "bridal veil",
-    "ropewiki": null,
+    "canyon": "Bridal Veil",
+    "link": "https://ropewiki.com/Bridal_Veil_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -297,8 +297,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "eagle (lower)",
-    "ropewiki": null,
+    "canyon": "Eagle (Lower)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -308,8 +308,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "young",
-    "ropewiki": null,
+    "canyon": "Young",
+    "link": "https://ropewiki.com/Young_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -319,8 +319,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "hagar",
-    "ropewiki": null,
+    "canyon": "Hagar",
+    "link": "https://ropewiki.com/Hager_Canyon",
     "region": "PNW",
     "class": "C",
     "flow": "mod",
@@ -330,8 +330,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "davis",
-    "ropewiki": null,
+    "canyon": "Davis",
+    "link": "https://ropewiki.com/Davis_Creek_Canyon",
     "region": "PNW",
     "class": "C",
     "flow": "mod",
@@ -341,8 +341,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "unicorn",
-    "ropewiki": null,
+    "canyon": "Unicorn",
+    "link": "https://ropewiki.com/Unicorn_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod-low",
@@ -352,8 +352,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "ollalie",
-    "ropewiki": null,
+    "canyon": "Ollalie",
+    "link": "https://ropewiki.com/Olallie_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod",
@@ -363,8 +363,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "cussed hollow",
-    "ropewiki": null,
+    "canyon": "Cussed Hollow",
+    "link": "https://ropewiki.com/Cussed_Hollow",
     "region": "PNW",
     "class": "C",
     "flow": "mod",
@@ -374,8 +374,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "dark",
-    "ropewiki": null,
+    "canyon": "Dark",
+    "link": "https://ropewiki.com/Dark_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "high",
@@ -385,8 +385,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "eagle (full)",
-    "ropewiki": null,
+    "canyon": "Eagle (Full)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "mod-high?",
@@ -396,8 +396,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "dog",
-    "ropewiki": null,
+    "canyon": "Dog",
+    "link": "https://ropewiki.com/Dog_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mid-high",
@@ -407,8 +407,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "duncan",
-    "ropewiki": null,
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low?",
@@ -418,8 +418,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "stafford",
-    "ropewiki": null,
+    "canyon": "Stafford",
+    "link": "https://ropewiki.com/Stafford_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low?",
@@ -429,8 +429,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "dog",
-    "ropewiki": null,
+    "canyon": "Dog",
+    "link": "https://ropewiki.com/Dog_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low?",
@@ -446,8 +446,8 @@
     "sort_date": "2024-05-06",
     "canyons": [
       {
-        "canyon": "bon appetit",
-        "ropewiki": null,
+        "canyon": "Bon Appetit",
+        "link": "https://www.climb-utah.com/Escalante/bonappetit.htm",
         "region": "Escalante",
         "class": "B",
         "flow": "\u2014",
@@ -456,8 +456,8 @@
         "sort_date": "2024-05-06"
       },
       {
-        "canyon": "top chef",
-        "ropewiki": null,
+        "canyon": "Top Chef",
+        "link": "https://www.climb-utah.com/Escalante/topchef.htm",
         "region": "Escalante",
         "class": "B",
         "flow": "\u2014",
@@ -466,8 +466,8 @@
         "sort_date": "2024-05-06"
       },
       {
-        "canyon": "neon (full)",
-        "ropewiki": null,
+        "canyon": "Neon (Full)",
+        "link": null,
         "region": "Escalante",
         "class": "B",
         "flow": "potholes full",
@@ -476,8 +476,8 @@
         "sort_date": "2024-05-06"
       },
       {
-        "canyon": "egypt 2",
-        "ropewiki": null,
+        "canyon": "Egypt 2",
+        "link": "https://ropewiki.com/Egypt_2_Canyon",
         "region": "Escalante",
         "class": "A",
         "flow": "\u2014",
@@ -488,8 +488,8 @@
     ]
   },
   {
-    "canyon": "munra",
-    "ropewiki": null,
+    "canyon": "Munra",
+    "link": "https://ropewiki.com/Munra_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod/mod-low",
@@ -499,8 +499,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "parker (upper)",
-    "ropewiki": null,
+    "canyon": "Parker (upper)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "ice!",
@@ -510,8 +510,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "bridal veil",
-    "ropewiki": null,
+    "canyon": "Bridal Veil",
+    "link": "https://ropewiki.com/Bridal_Veil_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "?",
@@ -521,8 +521,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "memaloose",
-    "ropewiki": null,
+    "canyon": "Memaloose",
+    "link": "https://ropewiki.com/Memaloose_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod-low",
@@ -532,8 +532,19 @@
     "type": "day trip"
   },
   {
-    "canyon": "parker (upper)",
-    "ropewiki": null,
+    "canyon": "Sf Clackamas",
+    "link": "https://ropewiki.com/South_Fork_Clackamas_River",
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": null,
+    "display_date": "October 2023",
+    "sort_date": "2023-10-09",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Parker (upper)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -543,8 +554,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "bridal veil",
-    "ropewiki": null,
+    "canyon": "Bridal Veil",
+    "link": "https://ropewiki.com/Bridal_Veil_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "?",
@@ -554,8 +565,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "dark",
-    "ropewiki": null,
+    "canyon": "Dark",
+    "link": "https://ropewiki.com/Dark_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod",
@@ -565,8 +576,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "davis",
-    "ropewiki": null,
+    "canyon": "Davis",
+    "link": "https://ropewiki.com/Davis_Creek_Canyon",
     "region": "PNW",
     "class": "C",
     "flow": "?",
@@ -576,8 +587,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "panther (rainier)",
-    "ropewiki": null,
+    "canyon": "Panther",
+    "link": "https://ropewiki.com/Panther_Creek_(Mount_Rainier_National_Park)",
     "region": "PNW",
     "class": "C",
     "flow": "?",
@@ -587,8 +598,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "summit (middle)",
-    "ropewiki": null,
+    "canyon": "Summit (Middle)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "?",
@@ -598,8 +609,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "hopkins",
-    "ropewiki": null,
+    "canyon": "Hopkins",
+    "link": "https://ropewiki.com/Hopkins_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low?",
@@ -609,8 +620,8 @@
     "type": "day trip"
   },
   {
-    "canyon": "dark (bailed)",
-    "ropewiki": null,
+    "canyon": "Dark (bailed)",
+    "link": null,
     "region": "PNW",
     "class": "C",
     "flow": "high?",
@@ -620,25 +631,14 @@
     "type": "day trip"
   },
   {
-    "canyon": "dog",
-    "ropewiki": null,
+    "canyon": "Dog",
+    "link": "https://ropewiki.com/Dog_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low?",
     "notes": "mazamas class trip #1",
     "display_date": "June 2023",
     "sort_date": "2023-06-18",
-    "type": "day trip"
-  },
-  {
-    "canyon": "sf clackamas",
-    "ropewiki": null,
-    "region": "PNW",
-    "class": "C",
-    "flow": "mod-low",
-    "notes": null,
-    "display_date": null,
-    "sort_date": "0000-01-01",
     "type": "day trip"
   }
 ]
