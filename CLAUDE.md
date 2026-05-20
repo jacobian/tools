@@ -24,6 +24,10 @@ For **data-driven tools** (see `canyons/`):
 2. Register it in `justfile` under `fetch-data`
 3. Create `<name>/index.njk` with `layout: index.njk` frontmatter; use `{{ <name> }}` to access the data
 
+## UI style discipline
+
+Don't vary font sizes or colors within a page except where the existing file already establishes a pattern. Resist introducing `text-sm`, `text-gray-500`, `text-2xl`, etc. to differentiate elements — keep to the few sizes/colors already in use in each file.
+
 ## Canyon Log (`canyons/`)
 
 - Data source: public Google Sheet, fetched via `bin/fetch-canyons`
