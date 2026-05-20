@@ -14,7 +14,7 @@
       table th, table td {
         @apply p-2;
       }
-      input[type="number"] {
+      input[type="number"], input[type="text"] {
         @apply w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500;
       }
       select {
@@ -28,6 +28,9 @@
       }
       .btn-red {
         @apply bg-red-500 hover:bg-red-600;
+      }
+      .btn-blue {
+        @apply bg-blue-500 hover:bg-blue-600;
       }
       .btn-delete {
         @apply bg-red-200 hover:bg-red-400;
@@ -46,14 +49,50 @@
   <body class="bg-gray-100 font-sans">
     <div class="container mx-auto max-w-4xl px-4 py-8" x-data="tripPlanner()">
       <h1 class="text-2xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
+
+      <!-- Trip name card -->
+      <div class="section-container mb-6">
+        <!-- Unnamed or renaming: input + Save -->
+        <div x-show="!savedTitle || isEditingTitle" class="flex gap-2 items-center">
+          <input
+            type="text"
+            x-model="editingTitle"
+            @keydown.enter="saveName()"
+            placeholder="Name this trip to save it…"
+            class="flex-1"
+            x-ref="nameInput"
+          />
+          <button
+            @click="saveName()"
+            :disabled="!editingTitle.trim()"
+            :class="editingTitle.trim() ? 'btn btn-green' : 'btn btn-green opacity-50 cursor-not-allowed'"
+          >Save</button>
+          <button
+            x-show="isEditingTitle"
+            @click="cancelRename()"
+            class="btn btn-red"
+          >Cancel</button>
+        </div>
+
+        <!-- Named and locked: title + pencil icon inline, New Trip far right -->
+        <div x-show="savedTitle && !isEditingTitle" class="flex items-center gap-2">
+          <span class="text-2xl font-bold text-green-800" x-text="savedTitle"></span>
+          <button @click="startRename()" class="btn btn-green" title="Rename">✏️</button>
+          <div class="flex-1"></div>
+          <button @click="clearTrip()" class="btn btn-blue">New Trip</button>
+        </div>
+      </div>
+
+      <!-- Trip legs card -->
       <div class="section-container mb-6">
         <table class="w-full mb-4">
           <thead>
             <tr>
               <th></th>
+              <th>Title</th>
               <th>Method</th>
-              <th>Distance (mil)</th>
-              <th>Gain (ft)</th>
+              <th class="w-24 whitespace-nowrap">Dist (mi)</th>
+              <th class="w-24">Gain (ft)</th>
               <th>Est Time</th>
               <th></th>
             </tr>
@@ -63,19 +102,22 @@
               <tr class="zebra-row">
                 <td x-text="index + 1"></td>
                 <td>
+                  <input type="text" x-model="leg.title" @blur="saveTrip()" />
+                </td>
+                <td>
                   <select x-model="leg.method" @change="saveTrip()" class="">
                     <template x-for="method in travelMethods" :key="method.name">
                       <option :value="method.name" x-text="method.name" :selected="leg.method === method.name"></option>
                     </template>
                   </select>
                 </td>
-                <td>
-                  <input type="number" x-model="leg.distance" @input="saveTrip()" min="0" step="0.1" class="" />
+                <td class="w-24">
+                  <input type="number" x-model="leg.distance" @blur="saveTrip()" min="0" step="0.1" class="" />
                 </td>
-                <td>
-                  <input type="number" x-model="leg.elevationGain" @input="saveTrip()" min="0" class="" />
+                <td class="w-24">
+                  <input type="number" x-model="leg.elevationGain" @blur="saveTrip()" min="0" class="" />
                 </td>
-                <td><span x-text="calculateLegTime(leg).toFixed(1)"></span> hours</td>
+                <td class="whitespace-nowrap"><span x-text="calculateLegTime(leg).toFixed(1)"></span> hours</td>
                 <td class="px-4 py-2 text-right">
                   <button @click="removeLeg(index)" class="btn btn-delete">❌</button>
                 </td>
@@ -84,28 +126,23 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="6" class="px-4 py-2 text-right">
+              <td colspan="7" class="px-4 py-2 text-right">
                 <button @click="addLeg()" class="btn btn-green">➕</button>
               </td>
             </tr>
           </tfoot>
         </table>
 
-        <div class="flex items-center">
-          <h2 class="section-heading flex-1">
-            Total:
-            <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>),
-            <span x-text="totalElevationGain">...</span> feet gain,
-            <span x-text="totalTime.toFixed(1)">...</span> hours.
-          </h2>
-
-          <div>
-            <button @click="clearTrip()" class="btn btn-red">Reset All</button>
-          </div>
-        </div>
+        <h2 class="section-heading">
+          Total:
+          <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>),
+          <span x-text="totalElevationGain">...</span> feet gain,
+          <span x-text="totalTime.toFixed(1)">...</span> hours.
+        </h2>
       </div>
 
-      <div class="section-container">
+      <!-- Travel methods card -->
+      <div class="section-container mb-6">
         <h2 class="section-heading mb-4">Travel Methods</h2>
         <table class="w-full mb-4">
           <thead>
@@ -121,24 +158,10 @@
               <tr class="zebra-row">
                 <td x-text="method.name"></td>
                 <td>
-                  <input
-                    type="number"
-                    x-model="method.minutesPerMile"
-                    @input="saveTrip()"
-                    min="0"
-                    step="0.1"
-                    class=""
-                  />
+                  <input type="number" x-model="method.minutesPerMile" @blur="saveTrip()" min="0" step="0.1" class="" />
                 </td>
                 <td>
-                  <input
-                    type="number"
-                    x-model="method.minutesPer1000ft"
-                    @input="saveTrip()"
-                    min="0"
-                    step="0.1"
-                    class=""
-                  />
+                  <input type="number" x-model="method.minutesPer1000ft" @blur="saveTrip()" min="0" step="0.1" class="" />
                 </td>
                 <td class="px-4 py-2 text-right">
                   <button
@@ -146,9 +169,7 @@
                     class="btn btn-delete"
                     :disabled="travelMethods.length <= 1"
                     :class="{'opacity-50 cursor-not-allowed': travelMethods.length <= 1}"
-                  >
-                    ❌
-                  </button>
+                  >❌</button>
                 </td>
               </tr>
             </template>
@@ -162,18 +183,46 @@
           </tfoot>
         </table>
       </div>
+
+      <!-- Saved trips card -->
+      <div class="section-container" x-show="savedTripsList.length > 0">
+        <h2 class="section-heading mb-4">Saved Trips</h2>
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left">Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="name in savedTripsList" :key="name">
+              <tr class="zebra-row">
+                <td x-text="name"></td>
+                <td class="text-right">
+                  <div class="flex gap-2 justify-end">
+                    <button @click="loadNamedTrip(name)" class="btn btn-green">Load</button>
+                    <button @click="deleteNamedTrip(name)" class="btn btn-red">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <script>
       function tripPlanner() {
         return {
-          
-          defaultLegs: [
-            { method: "hike", distance: 3.5, elevationGain: 750 },
-            { method: "float", distance: 2.0, elevationGain: 0 },
-            { method: "bushwhack", distance: 1.2, elevationGain: 500 },
-          ],
+          savedTitle: null,     // name currently persisted in tripPlans
+          editingTitle: '',     // value in the name input
+          isEditingTitle: false, // true when in rename mode
 
+          defaultLegs: [
+            { title: "", method: "hike", distance: 3.5, elevationGain: 750 },
+            { title: "", method: "float", distance: 2.0, elevationGain: 0 },
+            { title: "", method: "bushwhack", distance: 1.2, elevationGain: 500 },
+          ],
           defaultTravelMethods: [
             { name: "hike", minutesPerMile: 20, minutesPer1000ft: 30 },
             { name: "float", minutesPerMile: 15, minutesPer1000ft: 0 },
@@ -181,11 +230,89 @@
           ],
           legs: [],
           travelMethods: [],
+          savedTripsList: [],
+
+          // ── Name management ───────────────────────────────────────────────
+
+          saveName() {
+            const name = this.editingTitle.trim();
+            if (!name) return;
+
+            const plans = JSON.parse(localStorage.getItem("tripPlans") || "{}");
+
+            // If renaming, remove the old entry
+            if (this.savedTitle && this.savedTitle !== name) {
+              delete plans[this.savedTitle];
+            }
+
+            plans[name] = { legs: this.legs, travelMethods: this.travelMethods };
+            localStorage.setItem("tripPlans", JSON.stringify(plans));
+            this.savedTripsList = Object.keys(plans);
+            this.savedTitle = name;
+            this.isEditingTitle = false;
+            this.saveSessionState();
+          },
+
+          startRename() {
+            this.editingTitle = this.savedTitle;
+            this.isEditingTitle = true;
+            this.$nextTick(() => this.$refs.nameInput.focus());
+          },
+
+          cancelRename() {
+            this.editingTitle = this.savedTitle;
+            this.isEditingTitle = false;
+          },
+
+          // ── Trip data persistence ─────────────────────────────────────────
+
+          saveTrip() {
+            this.saveSessionState();
+            if (!this.savedTitle) return;
+            const plans = JSON.parse(localStorage.getItem("tripPlans") || "{}");
+            plans[this.savedTitle] = { legs: this.legs, travelMethods: this.travelMethods };
+            localStorage.setItem("tripPlans", JSON.stringify(plans));
+          },
+
+          saveSessionState() {
+            localStorage.setItem("savedTrip", JSON.stringify({
+              savedTitle: this.savedTitle,
+              editingTitle: this.editingTitle,
+              legs: this.legs,
+              travelMethods: this.travelMethods,
+            }));
+          },
+
+          loadNamedTrip(name) {
+            const plans = JSON.parse(localStorage.getItem("tripPlans") || "{}");
+            const trip = plans[name];
+            if (!trip) return;
+            this.savedTitle = name;
+            this.editingTitle = name;
+            this.isEditingTitle = false;
+            this.legs = trip.legs;
+            this.travelMethods = trip.travelMethods;
+            this.saveSessionState();
+          },
+
+          deleteNamedTrip(name) {
+            if (!confirm(`Delete "${name}"?`)) return;
+            const plans = JSON.parse(localStorage.getItem("tripPlans") || "{}");
+            delete plans[name];
+            localStorage.setItem("tripPlans", JSON.stringify(plans));
+            this.savedTripsList = Object.keys(plans);
+            if (this.savedTitle === name) {
+              this.savedTitle = null;
+              this.editingTitle = '';
+              this.saveSessionState();
+            }
+          },
+
+          // ── Leg / method mutations ────────────────────────────────────────
 
           addLeg() {
-            // Default to first travel method in the list
             const defaultMethod = this.travelMethods.length > 0 ? this.travelMethods[0].name : "";
-            this.legs.push({ method: defaultMethod, distance: 0, elevationGain: 0 });
+            this.legs.push({ title: "", method: defaultMethod, distance: 0, elevationGain: 0 });
             this.saveTrip();
           },
 
@@ -195,31 +322,23 @@
           },
 
           addMethod() {
-            // Store old name for tracking future changes
             const name = prompt("name");
-            const newMethod = { name: name, minutesPerMile: 20, minutesPer1000ft: 30 };
-            this.travelMethods.push(newMethod);
+            if (!name) return;
+            this.travelMethods.push({ name, minutesPerMile: 20, minutesPer1000ft: 30 });
             this.saveTrip();
           },
 
           removeMethod(index) {
-            // Prevent removing the last method
-            if (this.travelMethods.length <= 1) {
-              return;
-            }
-
+            if (this.travelMethods.length <= 1) return;
             const removedMethod = this.travelMethods[index].name;
             this.travelMethods.splice(index, 1);
-
-            // Update any legs that were using the removed method
             this.legs.forEach((leg) => {
-              if (leg.method === removedMethod) {
-                leg.method = this.travelMethods[0].name;
-              }
+              if (leg.method === removedMethod) leg.method = this.travelMethods[0].name;
             });
-
             this.saveTrip();
           },
+
+          // ── Computed totals ───────────────────────────────────────────────
 
           get totalDistance() {
             return this.legs.reduce((sum, leg) => sum + parseFloat(leg.distance || 0), 0);
@@ -232,25 +351,19 @@
           get methodBreakdown() {
             const methods = {};
             this.legs.forEach((leg) => {
-              if (!methods[leg.method]) {
-                methods[leg.method] = 0;
-              }
+              if (!methods[leg.method]) methods[leg.method] = 0;
               methods[leg.method] += parseFloat(leg.distance || 0);
             });
-
-            let breakdown = [];
-            for (const [method, distance] of Object.entries(methods)) {
-              breakdown.push(`${distance.toFixed(1)} ${method.toLowerCase()}`);
-            }
-            return breakdown.join(", ");
+            return Object.entries(methods)
+              .map(([method, distance]) => `${distance.toFixed(1)} ${method.toLowerCase()}`)
+              .join(", ");
           },
 
           calculateLegTime(leg) {
             const method = this.travelMethods.find((m) => m.name === leg.method);
             if (!method) return 0;
             const distanceTime = parseFloat(leg.distance || 0) * parseFloat(method.minutesPerMile || 0);
-            const elevationTime =
-              (parseFloat(leg.elevationGain || 0) / 1000) * parseFloat(method.minutesPer1000ft || 0);
+            const elevationTime = (parseFloat(leg.elevationGain || 0) / 1000) * parseFloat(method.minutesPer1000ft || 0);
             return (distanceTime + elevationTime) / 60;
           },
 
@@ -258,36 +371,33 @@
             return this.legs.reduce((sum, leg) => sum + this.calculateLegTime(leg), 0);
           },
 
-          saveTrip() {
-            const tripData = {
-              legs: this.legs,
-              travelMethods: this.travelMethods,
-            };
-            localStorage.setItem("savedTrip", JSON.stringify(tripData));
-          },
+          // ── Reset ─────────────────────────────────────────────────────────
 
           clearTrip() {
-            if (confirm("Are you sure you want to clear all trip data?")) {
-              this.legs = this.defaultLegs;
-              this.travelMethods = this.defaultTravelMethods;
-              localStorage.removeItem("savedTrip");
-            }
+            if (!this.savedTitle && !confirm("Are you sure you want to clear all trip data?")) return;
+            this.savedTitle = null;
+            this.editingTitle = '';
+            this.isEditingTitle = false;
+            this.legs = [...this.defaultLegs];
+            this.travelMethods = [...this.defaultTravelMethods];
+            localStorage.removeItem("savedTrip");
           },
+
+          // ── Init ──────────────────────────────────────────────────────────
 
           init() {
             const savedTrip = localStorage.getItem("savedTrip");
             if (savedTrip) {
-              const tripData = JSON.parse(savedTrip);
-              if (tripData.travelMethods) {
-                this.travelMethods = tripData.travelMethods;
-              }
-              if (tripData.legs) {
-                this.legs = tripData.legs;
-              }
+              const data = JSON.parse(savedTrip);
+              this.savedTitle = data.savedTitle || null;
+              this.editingTitle = data.editingTitle || '';
+              if (data.travelMethods) this.travelMethods = data.travelMethods;
+              if (data.legs) this.legs = data.legs;
             } else {
-              this.legs = this.defaultLegs;
-              this.travelMethods = this.defaultTravelMethods;
+              this.legs = [...this.defaultLegs];
+              this.travelMethods = [...this.defaultTravelMethods];
             }
+            this.savedTripsList = Object.keys(JSON.parse(localStorage.getItem("tripPlans") || "{}"));
           },
         };
       }
