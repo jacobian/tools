@@ -16,7 +16,7 @@
     "region": "PNW",
     "class": "C",
     "flow": "mod",
-    "notes": "Noticibly lower flow than usual for this time of year, but also very cold - interesting. Canyon class practice, messed around with various things. Exited at the crossing.",
+    "notes": "Noticibly lower flow than usual for this time of year, but also very cold - interesting. Led a couple of new assistants wanting a chance to practice some skills. Common mistake: forgetting to thread the bolts before rigging an MMO.",
     "display_date": "May 2026",
     "sort_date": "2026-05-09",
     "type": "day trip"
@@ -34,7 +34,7 @@
   },
   {
     "type": "expedition",
-    "name": "Skurka Canyoneering 201",
+    "name": "Canyoneering 201",
     "display_date": "April 2026",
     "sort_date": "2026-04-27",
     "canyons": [
@@ -47,22 +47,14 @@
         "notes": "Short and action-packed. Great final drop. Want to explore the other GCN side canyons",
         "display_date": "April 2026",
         "sort_date": "2026-04-27"
-      }
-    ]
-  },
-  {
-    "type": "expedition",
-    "name": "Skurka Canyoneering 202",
-    "display_date": "April 2026",
-    "sort_date": "2026-04-27",
-    "canyons": [
+      },
       {
         "canyon": "Prima",
         "link": null,
         "region": "Escalante ",
         "class": "B",
         "flow": null,
-        "notes": "Very long and very wet - but sunny. Mostly swims and downclimbs, a couple of short drops - and then a final spectacular 220' free hang",
+        "notes": "Very long and very wet - but sunny. Spent two days in the canyon - climbed out halfway and camped on the Wingate. Mostly swims and downclimbs, a couple of short drops - and then a final spectacular 220' free hang",
         "display_date": "April 2026",
         "sort_date": "2026-04-27"
       }
@@ -274,7 +266,7 @@
   },
   {
     "type": "expedition",
-    "name": "canyonlands quad trek",
+    "name": "Canyonlands Quad Trek",
     "display_date": "April 2025",
     "sort_date": "2025-04-14",
     "canyons": [
@@ -510,7 +502,7 @@
   },
   {
     "type": "expedition",
-    "name": "skurka canyoneering",
+    "name": "Skurka Canyoneering",
     "display_date": "May 2024",
     "sort_date": "2024-05-06",
     "canyons": [
@@ -590,23 +582,12 @@
     "type": "day trip"
   },
   {
-    "canyon": "Memaloose",
+    "canyon": "Memaloose + South Fork Clackamas",
     "link": "https://ropewiki.com/Memaloose_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod-low",
-    "notes": "mem is fantastic. the 200' rap on clack was my best long rap yet, but still struggling with getting spooked by the height. need to work on this",
-    "display_date": "October 2023",
-    "sort_date": "2023-10-09",
-    "type": "day trip"
-  },
-  {
-    "canyon": "Sf Clackamas",
-    "link": "https://ropewiki.com/South_Fork_Clackamas_River",
-    "region": "PNW",
-    "class": "C",
-    "flow": "mod-low",
-    "notes": null,
+    "notes": "Mem is fantastic. The 200' rap on clack was my best long rap yet, but still struggling with getting spooked by the height. need to work on this",
     "display_date": "October 2023",
     "sort_date": "2023-10-09",
     "type": "day trip"
