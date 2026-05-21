@@ -19,6 +19,9 @@
       select {
         @apply w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500;
       }
+      h1 { 
+        @apply text-2xl font-bold text-center text-green-800 mb-6;
+      }
       .btn {
         @apply px-4 py-2 rounded-md transition text-white;
       }
@@ -34,11 +37,11 @@
       .btn-delete {
         @apply bg-red-200 hover:bg-red-400;
       }
-      .section-container {
-        @apply bg-white rounded-lg shadow-lg p-6;
+      .section {
+        @apply bg-white border p-6 mb-6;
       }
-      .section-heading {
-        @apply text-xl font-semibold text-green-700;
+      h2 {
+        @apply text-xl font-semibold text-green-700 mb-6;
       }
       .zebra-row {
         @apply even:bg-gray-50 odd:bg-white;
@@ -47,11 +50,9 @@
   </head>
   <body class="bg-gray-100 font-sans">
     <div class="container mx-auto max-w-4xl px-4 py-8" x-data="tripPlanner()">
-      <h1 class="text-2xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
 
       <!-- Trip name card -->
-      <div class="section-container mb-6">
-        <!-- Unnamed or renaming: input + Save -->
+      <div class="section">
         <div x-show="!savedTitle || isEditingTitle" class="flex gap-2 items-center">
           <input
             type="text"
@@ -83,7 +84,8 @@
       </div>
 
       <!-- Trip legs card -->
-      <div class="section-container mb-6">
+      <div class="section">
+        <h2>Trip Legs</h2>
         <table class="w-full mb-4">
           <thead>
             <tr>
@@ -141,20 +143,17 @@
       </div>
 
       <!-- Day planning card -->
-      <div class="section-container mb-6">
-        <div class="flex items-center gap-3 flex-wrap">
-          <h2 class="section-heading whitespace-nowrap">Day Planning</h2>
-          <span class="text-gray-400 font-medium">—</span>
-          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Max Miles:</label>
-          <div class="w-24"><input type="number" x-model="dailyMaxMiles" @blur="saveTrip()" min="0" step="0.1" /></div>
-          <span class="text-gray-400">|</span>
-          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Max Gain (ft):</label>
-          <div class="w-24"><input type="number" x-model="dailyMaxGain" @blur="saveTrip()" min="0" /></div>
-        </div>
+      <div class="section">
+        <h2>Day Planning:</h2>
+
+        <label for="dailyMaxMiles">Max Miles:</label>
+        <input id="dailyMaxMiles" type="number" x-model="dailyMaxMiles" @blur="saveTrip()" min="0" step="0.1" />
+        <label for="dailyMaxGain">Max Gain (ft):</label>
+        <input id="dailyMaxGain" type="number" x-model="dailyMaxGain" @blur="saveTrip()" min="0" />
 
         <template x-if="dayPlanRows.length > 0">
           <div class="mt-4">
-            <p class="text-2xl font-bold text-green-800 mb-3" x-text="`${dayPlan.days.length} days`"></p>
+            <h2 x-text="`Trip length: ${dayPlan.days.length} days`"></h2>
             <table class="w-full">
               <tbody>
                 <template x-for="(row, i) in dayPlanRows" :key="i">
@@ -176,8 +175,8 @@
       </div>
 
       <!-- Travel methods card -->
-      <div class="section-container mb-6">
-        <h2 class="section-heading mb-4">Travel Methods</h2>
+      <div class="section">
+        <h2>Travel Methods</h2>
         <table class="w-full mb-4">
           <thead>
             <tr>
@@ -219,8 +218,8 @@
       </div>
 
       <!-- Saved trips card -->
-      <div class="section-container" x-show="savedTripsList.length > 0">
-        <h2 class="section-heading mb-4">Saved Trips</h2>
+      <div class="section" x-show="savedTripsList.length > 0">
+        <h2>Saved Trips</h2>
         <table class="w-full">
           <thead>
             <tr>
