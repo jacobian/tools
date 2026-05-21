@@ -1,0 +1,14 @@
+{
+  "total": 61,
+  "unique_total": 48,
+  "by_class": {
+    "C": 45,
+    "A": 9,
+    "B": 7
+  },
+  "unique_by_class": {
+    "C": 32,
+    "A": 9,
+    "B": 7
+  }
+}

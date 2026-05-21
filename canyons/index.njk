@@ -11,14 +11,18 @@
       main h2 { @apply font-medium text-xl mb-2 mt-16; }
       main p, main li { @apply mb-3 text-gray-700; }
       main a { @apply underline; }
-      table { @apply w-full text-sm border-collapse mt-4; }
-      tbody tr { @apply border-b border-gray-200; }
-      td { @apply px-3 py-3 text-gray-900 align-middle; }
-      td h3 { @apply font-semibold text-black block; }
-      td.date { @apply text-gray-900 whitespace-nowrap; }
-      th { @apply px-3 py-3 text-left font-semibold; }
-      thead { @apply bg-gray-900 text-white; }
       .container { @apply mx-auto px-4 py-8 max-w-7xl; }
+
+      .stats p { @apply text-center italic; }
+
+      .canyons { @apply w-full text-sm border-collapse mt-4; }
+      .canyons tbody tr { @apply border-b border-gray-200; }
+      .canyons td { @apply px-3 py-3 text-gray-900 align-middle; }
+      .canyons td h3 { @apply font-semibold text-black block; }
+      .canyons td.date { @apply text-gray-900 whitespace-nowrap; }
+      .canyons th { @apply px-3 py-3 text-left font-semibold; }
+      .canyons thead { @apply bg-gray-900 text-white; }
+
       .canyon-title {@apply whitespace-nowrap font-bold; }
       .region { @apply whitespace-nowrap; }
       .empty { @apply text-gray-400; }
@@ -37,7 +41,15 @@
     <div class="container">
       <main>
         <h1>Canyon History</h1>
-        <table>
+        <div class="stats">
+          <p>Total: {{ canyon_stats.total }} • Unique: {{ canyon_stats.unique_total }} </p>
+          <p>
+            Class C: {{ canyon_stats.by_class.C }} ({{ canyon_stats.unique_by_class.C }} unique) • 
+            Class A/B: {{ canyon_stats.by_class.A + canyon_stats.by_class.B }} (all unique)
+          </p>
+        </div>
+
+        <table class="canyons">
           <thead>
             <tr>
               <th>Date</th>

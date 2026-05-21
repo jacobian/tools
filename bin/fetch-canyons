@@ -12,6 +12,7 @@ from pathlib import Path
 SHEET_ID = "1S2Ik2kmfm-CI7mXaWe8nlGlPAGZ3oZ7U0Af9qZoiRRg"
 URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 OUTPUT = Path(__file__).parent.parent / "_data" / "canyons.json"
+STATS_OUTPUT = Path(__file__).parent.parent / "_data" / "canyon_stats.json"
 
 MONTH_NAMES = [
     "January", "February", "March", "April", "May", "June",
@@ -139,6 +140,34 @@ def group_rows(rows: list[dict]) -> list[dict]:
     return result
 
 
+def compute_stats(grouped: list[dict]) -> dict:
+    all_canyons = []
+    for item in grouped:
+        if item["type"] == "day trip":
+            all_canyons.append(item)
+        else:
+            all_canyons.extend(item["canyons"])
+
+    total = len(all_canyons)
+    unique_total = len({c["canyon"] for c in all_canyons})
+
+    by_class: dict[str, int] = {}
+    unique_by_class_names: dict[str, set[str]] = {}
+    for c in all_canyons:
+        cls = c.get("class") or "?"
+        by_class[cls] = by_class.get(cls, 0) + 1
+        unique_by_class_names.setdefault(cls, set()).add(c["canyon"])
+
+    unique_by_class = {cls: len(names) for cls, names in unique_by_class_names.items()}
+
+    return {
+        "total": total,
+        "unique_total": unique_total,
+        "by_class": by_class,
+        "unique_by_class": unique_by_class,
+    }
+
+
 def main() -> None:
     print(f"Fetching {URL} ...")
     with urllib.request.urlopen(URL) as resp:
@@ -157,6 +186,10 @@ def main() -> None:
 
     OUTPUT.write_text(json.dumps(grouped, indent=2))
     print(f"Wrote {len(grouped)} entries ({len(rows)} canyons) to {OUTPUT}")
+
+    stats = compute_stats(grouped)
+    STATS_OUTPUT.write_text(json.dumps(stats, indent=2))
+    print(f"Wrote stats to {STATS_OUTPUT}")
 
 
 if __name__ == "__main__":
