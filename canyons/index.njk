@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }}</title>
+    <title>JKM - Canyon History</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
       main { @apply bg-white rounded-lg shadow-md p-6 mb-8; }
@@ -22,7 +22,6 @@
       .canyons td.date { @apply text-gray-900 whitespace-nowrap; }
       .canyons th { @apply px-3 py-3 text-left font-semibold; }
       .canyons thead { @apply bg-gray-900 text-white; }
-
       .canyon-title {@apply whitespace-nowrap font-bold; }
       .region { @apply whitespace-nowrap; }
       .empty { @apply text-gray-400; }
@@ -40,7 +39,7 @@
   <body class="bg-gray-100 min-h-screen font-sans">
     <div class="container">
       <main>
-        <h1>Canyon History</h1>
+        <h1>JKM - Canyon History</h1>
         <div class="stats">
           <p>Total: {{ canyon_stats.total }} • Unique: {{ canyon_stats.unique_total }} </p>
           <p>
