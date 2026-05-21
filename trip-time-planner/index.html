@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hiking Trip Planner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+      table thead tr {
+        @apply bg-green-100 text-center;
+      }
+      table th, table td {
+        @apply p-2;
+      }
+      input[type="number"], input[type="text"] {
+        @apply w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500;
+      }
+      select {
+        @apply w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500;
+      }
+      .btn {
+        @apply px-4 py-2 rounded-md transition text-white;
+      }
+      .btn-green {
+        @apply bg-green-500 hover:bg-green-600;
+      }
+      .btn-red {
+        @apply bg-red-500 hover:bg-red-600;
+      }
+      .btn-blue {
+        @apply bg-blue-500 hover:bg-blue-600;
+      }
+      .btn-delete {
+        @apply bg-red-200 hover:bg-red-400;
+      }
+      .section-container {
+        @apply bg-white rounded-lg shadow-lg p-6;
+      }
+      .section-heading {
+        @apply text-xl font-semibold text-green-700;
+      }
+      .zebra-row {
+        @apply even:bg-gray-50 odd:bg-white;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="container mx-auto max-w-4xl px-4 py-8" x-data="tripPlanner()">
+      <h1 class="text-2xl font-bold text-center text-green-800 mb-6">Trip Planner</h1>
+
+      <!-- Trip name card -->
+      <div class="section-container mb-6">
+        <!-- Unnamed or renaming: input + Save -->
+        <div x-show="!savedTitle || isEditingTitle" class="flex gap-2 items-center">
+          <input
+            type="text"
+            x-model="editingTitle"
+            @keydown.enter="saveName()"
+            placeholder="Name this trip to save it…"
+            class="flex-1"
+            x-ref="nameInput"
+          />
+          <button
+            @click="saveName()"
+            :disabled="!editingTitle.trim()"
+            :class="editingTitle.trim() ? 'btn btn-green' : 'btn btn-green opacity-50 cursor-not-allowed'"
+          >Save</button>
+          <button
+            x-show="isEditingTitle"
+            @click="cancelRename()"
+            class="btn btn-red"
+          >Cancel</button>
+        </div>
+
+        <!-- Named and locked: title + pencil icon inline, New Trip far right -->
+        <div x-show="savedTitle && !isEditingTitle" class="flex items-center gap-2">
+          <span class="text-2xl font-bold text-green-800" x-text="savedTitle"></span>
+          <button @click="startRename()" class="btn btn-green" title="Rename">✏️</button>
+          <div class="flex-1"></div>
+          <button @click="clearTrip()" class="btn btn-blue">New Trip</button>
+        </div>
+      </div>
+
+      <!-- Trip legs card -->
+      <div class="section-container mb-6">
+        <table class="w-full mb-4">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Title</th>
+              <th>Method</th>
+              <th class="w-24 whitespace-nowrap">Dist (mi)</th>
+              <th class="w-24">Gain (ft)</th>
+              <th>Est Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(leg, index) in legs" :key="index">
+              <tr class="zebra-row">
+                <td x-text="index + 1"></td>
+                <td>
+                  <input type="text" x-model="leg.title" @blur="saveTrip()" />
+                </td>
+                <td>
+                  <select x-model="leg.method" @change="saveTrip()" class="">
+                    <template x-for="method in travelMethods" :key="method.name">
+                      <option :value="method.name" x-text="method.name" :selected="leg.method === method.name"></option>
+                    </template>
+                  </select>
+                </td>
+                <td class="w-24">
+                  <input type="number" x-model="leg.distance" @blur="saveTrip()" min="0" step="0.1" class="" />
+                </td>
+                <td class="w-24">
+                  <input type="number" x-model="leg.elevationGain" @blur="saveTrip()" min="0" class="" />
+                </td>
+                <td class="whitespace-nowrap"><span x-text="calculateLegTime(leg).toFixed(1)"></span> hours</td>
+                <td class="px-4 py-2 text-right">
+                  <button @click="removeLeg(index)" class="btn btn-delete">❌</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="px-4 py-2 text-right">
+                <button @click="addLeg()" class="btn btn-green">➕</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <h2 class="section-heading">
+          Total:
+          <span x-text="totalDistance.toFixed(1)">...</span> miles (<span x-text="methodBreakdown">...</span>),
+          <span x-text="totalElevationGain">...</span> feet gain,
+          <span x-text="totalTime.toFixed(1)">...</span> hours.
+        </h2>
+      </div>
+
+      <!-- Day planning card -->
+      <div class="section-container mb-6">
+        <div class="flex items-center gap-3 flex-wrap">
+          <h2 class="section-heading whitespace-nowrap">Day Planning</h2>
+          <span class="text-gray-400 font-medium">—</span>
+          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Max Miles:</label>
+          <div class="w-24"><input type="number" x-model="dailyMaxMiles" @blur="saveTrip()" min="0" step="0.1" /></div>
+          <span class="text-gray-400">|</span>
+          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">Max Gain (ft):</label>
+          <div class="w-24"><input type="number" x-model="dailyMaxGain" @blur="saveTrip()" min="0" /></div>
+        </div>
+
+        <template x-if="dayPlanRows.length > 0">
+          <div class="mt-4">
+            <p class="text-2xl font-bold text-green-800 mb-3" x-text="`${dayPlan.days.length} days`"></p>
+            <table class="w-full">
+              <tbody>
+                <template x-for="(row, i) in dayPlanRows" :key="i">
+                  <tr :class="[row.n % 2 === 1 ? 'bg-white' : 'bg-gray-50', row.type === 'day' && row.n > 1 ? 'border-t-4 border-gray-100' : '']">
+                    <td class="whitespace-nowrap w-20 px-2 font-medium" :class="row.type === 'day' ? 'pt-2 pb-1' : 'pt-0 pb-1'" x-text="row.type === 'day' ? `Day ${row.n}` : ''"></td>
+                    <td class="px-2" :class="row.type === 'day' ? 'pt-2 pb-1' : 'pt-0 pb-1'">
+                      <div x-show="row.type === 'day'">
+                        <div x-text="row.summary"></div>
+                        <div x-text="row.legs"></div>
+                      </div>
+                      <span x-show="row.type === 'camp'" x-text="row.text"></span>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </template>
+      </div>
+
+      <!-- Travel methods card -->
+      <div class="section-container mb-6">
+        <h2 class="section-heading mb-4">Travel Methods</h2>
+        <table class="w-full mb-4">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Minutes per Mile</th>
+              <th>Minutes per 1000 ft Gain</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="(method, index) in travelMethods" :key="index">
+              <tr class="zebra-row">
+                <td x-text="method.name"></td>
+                <td>
+                  <input type="number" x-model="method.minutesPerMile" @blur="saveTrip()" min="0" step="0.1" class="" />
+                </td>
+                <td>
+                  <input type="number" x-model="method.minutesPer1000ft" @blur="saveTrip()" min="0" step="0.1" class="" />
+                </td>
+                <td class="px-4 py-2 text-right">
+                  <button
+                    @click="removeMethod(index)"
+                    class="btn btn-delete"
+                    :disabled="travelMethods.length <= 1"
+                    :class="{'opacity-50 cursor-not-allowed': travelMethods.length <= 1}"
+                  >❌</button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="px-4 py-2 text-right">
+                <button @click="addMethod()" class="btn btn-green">➕</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Saved trips card -->
+      <div class="section-container" x-show="savedTripsList.length > 0">
+        <h2 class="section-heading mb-4">Saved Trips</h2>
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left">Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-for="name in savedTripsList" :key="name">
+              <tr class="zebra-row">
+                <td x-text="name"></td>
+                <td class="text-right">
+                  <div class="flex gap-2 justify-end">
+                    <button @click="loadNamedTrip(name)" class="btn btn-green">Load</button>
+                    <button @click="deleteNamedTrip(name)" class="btn btn-red">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
