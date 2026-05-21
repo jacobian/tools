@@ -1,5 +1,74 @@
 [
   {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "Trey wanted to practice some guiding technique (top belay mostly), I came along to see what he did. Cool to see! Major takeaways: hanging 8 worked better than munter; intermediate master points (alpine on the rap strand) to get closer to the drop for the belay worked really well",
+    "display_date": "May 2026",
+    "sort_date": "2026-05-18",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "Noticibly lower flow than usual for this time of year, but also very cold - interesting. Canyon class practice, messed around with various things. Exited at the crossing.",
+    "display_date": "May 2026",
+    "sort_date": "2026-05-09",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Motocycle",
+    "link": "https://ropewiki.com/Motorcycle_Canyon",
+    "region": "Vegas",
+    "class": "A",
+    "flow": null,
+    "notes": "Fun and streightforward. Hot springs were lovely, wish I had time to stay and hang out. Exit up goldstrike a highlight, great and lovely walk.",
+    "display_date": "May 2026",
+    "sort_date": "2026-05-03",
+    "type": "day trip"
+  },
+  {
+    "type": "expedition",
+    "name": "Skurka Canyoneering 201",
+    "display_date": "April 2026",
+    "sort_date": "2026-04-27",
+    "canyons": [
+      {
+        "canyon": "\"GCN 1\"",
+        "link": null,
+        "region": "Escalante ",
+        "class": "B",
+        "flow": null,
+        "notes": "Short and action-packed. Great final drop. Want to explore the other GCN side canyons",
+        "display_date": "April 2026",
+        "sort_date": "2026-04-27"
+      }
+    ]
+  },
+  {
+    "type": "expedition",
+    "name": "Skurka Canyoneering 202",
+    "display_date": "April 2026",
+    "sort_date": "2026-04-27",
+    "canyons": [
+      {
+        "canyon": "Prima",
+        "link": null,
+        "region": "Escalante ",
+        "class": "B",
+        "flow": null,
+        "notes": "Very long and very wet - but sunny. Mostly swims and downclimbs, a couple of short drops - and then a final spectacular 220' free hang",
+        "display_date": "April 2026",
+        "sort_date": "2026-04-27"
+      }
+    ]
+  },
+  {
     "type": "expedition",
     "name": "Grand Canyon: Salt & Big",
     "display_date": "February 2026",
