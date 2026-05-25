@@ -1,5 +1,16 @@
 [
   {
+    "canyon": "Dog",
+    "link": "https://ropewiki.com/Dog_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "Another pre-class practice. The approach is getting worse, some sketchy sidehilling, I don't love it.",
+    "display_date": "May 2026",
+    "sort_date": "2026-05-23",
+    "type": "day trip"
+  },
+  {
     "canyon": "Duncan",
     "link": "https://ropewiki.com/Duncan_Creek",
     "region": "PNW",
