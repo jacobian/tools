@@ -146,14 +146,25 @@
       <div class="section">
         <h2>Day Planning:</h2>
 
-        <label for="dailyMaxMiles">Max Miles:</label>
-        <input id="dailyMaxMiles" type="number" x-model="dailyMaxMiles" @blur="saveTrip()" min="0" step="0.1" />
-        <label for="dailyMaxGain">Max Gain (ft):</label>
-        <input id="dailyMaxGain" type="number" x-model="dailyMaxGain" @blur="saveTrip()" min="0" />
+        <div class="flex flex-wrap items-center gap-4 mb-4">
+          <div class="flex items-center gap-2">
+            <label for="dailyMaxMiles">Max Miles:</label>
+            <div class="w-24"><input id="dailyMaxMiles" type="number" x-model="dailyMaxMiles" @blur="saveTrip()" min="0" step="0.1" /></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="dailyMaxGain">Max Gain (ft):</label>
+            <div class="w-24"><input id="dailyMaxGain" type="number" x-model="dailyMaxGain" @blur="saveTrip()" min="0" /></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="dailyMaxHours">Max Hours:</label>
+            <div class="w-24"><input id="dailyMaxHours" type="number" x-model="dailyMaxHours" @blur="saveTrip()" min="0" step="0.1" /></div>
+          </div>
+          <button @click="computeDayPlan()" class="btn btn-green">Compute</button>
+        </div>
 
         <template x-if="dayPlanRows.length > 0">
           <div class="mt-4">
-            <h2 x-text="`Trip length: ${dayPlan.days.length} days`"></h2>
+            <h2 x-text="`Trip length: ${computedPlan.days.length} days`"></h2>
             <table class="w-full">
               <tbody>
                 <template x-for="(row, i) in dayPlanRows" :key="i">

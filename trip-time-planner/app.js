@@ -19,6 +19,8 @@ function tripPlanner() {
     savedTripsList: [],
     dailyMaxMiles: '',
     dailyMaxGain: '',
+    dailyMaxHours: '',
+    computedPlan: { days: [], camps: [] },
 
     // ── Name management ───────────────────────────────────────────────
 
@@ -33,7 +35,7 @@ function tripPlanner() {
         delete plans[this.savedTitle];
       }
 
-      plans[name] = { legs: this.legs, travelMethods: this.travelMethods, dailyMaxMiles: this.dailyMaxMiles, dailyMaxGain: this.dailyMaxGain };
+      plans[name] = { legs: this.legs, travelMethods: this.travelMethods, dailyMaxMiles: this.dailyMaxMiles, dailyMaxGain: this.dailyMaxGain, dailyMaxHours: this.dailyMaxHours };
       localStorage.setItem("tripPlans", JSON.stringify(plans));
       this.savedTripsList = Object.keys(plans);
       this.savedTitle = name;
@@ -58,7 +60,7 @@ function tripPlanner() {
       this.saveSessionState();
       if (!this.savedTitle) return;
       const plans = JSON.parse(localStorage.getItem("tripPlans") || "{}");
-      plans[this.savedTitle] = { legs: this.legs, travelMethods: this.travelMethods, dailyMaxMiles: this.dailyMaxMiles, dailyMaxGain: this.dailyMaxGain };
+      plans[this.savedTitle] = { legs: this.legs, travelMethods: this.travelMethods, dailyMaxMiles: this.dailyMaxMiles, dailyMaxGain: this.dailyMaxGain, dailyMaxHours: this.dailyMaxHours };
       localStorage.setItem("tripPlans", JSON.stringify(plans));
     },
 
@@ -70,6 +72,8 @@ function tripPlanner() {
         travelMethods: this.travelMethods,
         dailyMaxMiles: this.dailyMaxMiles,
         dailyMaxGain: this.dailyMaxGain,
+        dailyMaxHours: this.dailyMaxHours,
+        computedPlan: this.computedPlan,
       }));
     },
 
@@ -84,6 +88,8 @@ function tripPlanner() {
       this.travelMethods = trip.travelMethods;
       this.dailyMaxMiles = trip.dailyMaxMiles || '';
       this.dailyMaxGain = trip.dailyMaxGain || '';
+      this.dailyMaxHours = trip.dailyMaxHours || '';
+      this.computedPlan = { days: [], camps: [] };
       this.saveSessionState();
     },
 
@@ -169,10 +175,16 @@ function tripPlanner() {
       return `${method} ${index + 1}`;
     },
 
-    get dayPlan() {
-      const maxMiles = parseFloat(this.dailyMaxMiles);
-      const maxGain = parseFloat(this.dailyMaxGain);
-      if (!maxMiles || !maxGain) return { days: [], camps: [] };
+    computeDayPlan() {
+      this.computedPlan = this._buildDayPlan();
+      this.saveSessionState();
+    },
+
+    _buildDayPlan() {
+      const maxMiles = parseFloat(this.dailyMaxMiles) || Infinity;
+      const maxGain = parseFloat(this.dailyMaxGain) || Infinity;
+      const maxHours = parseFloat(this.dailyMaxHours) || Infinity;
+      if (!isFinite(maxMiles) && !isFinite(maxGain) && !isFinite(maxHours)) return { days: [], camps: [] };
 
       const days = [];
       const camps = [];
@@ -208,10 +220,16 @@ function tripPlanner() {
           continue;
         }
 
-        const milesBudget = maxMiles - dayMiles;
-        const gainBudget = maxGain - dayGain;
+        const method = this.travelMethods.find(m => m.name === leg.method);
+        const mpm = method ? parseFloat(method.minutesPerMile || 0) : 0;
+        const mp1k = method ? parseFloat(method.minutesPer1000ft || 0) : 0;
+        const remainingLegTime = (remainingLegMiles * mpm + (remainingLegGain / 1000) * mp1k) / 60;
 
-        if (remainingLegMiles <= milesBudget + 1e-9 && remainingLegGain <= gainBudget + 1e-9) {
+        const milesBudget = isFinite(maxMiles) ? maxMiles - dayMiles : Infinity;
+        const gainBudget = isFinite(maxGain) ? maxGain - dayGain : Infinity;
+        const timeBudget = isFinite(maxHours) ? maxHours - current.time : Infinity;
+
+        if (remainingLegMiles <= milesBudget + 1e-9 && remainingLegGain <= gainBudget + 1e-9 && remainingLegTime <= timeBudget + 1e-9) {
           current.legs.push(this.legLabel(leg, legIndex));
           accumulate(leg, remainingLegMiles, remainingLegGain);
           dayMiles += remainingLegMiles;
@@ -219,9 +237,13 @@ function tripPlanner() {
           legIndex++;
           legOffset = 0;
         } else {
-          let milesWeCanDo = milesBudget;
-          if (gainRate > 0) milesWeCanDo = Math.min(milesWeCanDo, gainBudget / gainRate);
+          let milesWeCanDo = isFinite(milesBudget) ? milesBudget : remainingLegMiles;
+          if (isFinite(gainBudget) && gainRate > 0) milesWeCanDo = Math.min(milesWeCanDo, gainBudget / gainRate);
+          const timeRate = (mpm + gainRate * mp1k / 1000) / 60;
+          if (isFinite(timeBudget) && timeRate > 0) milesWeCanDo = Math.min(milesWeCanDo, timeBudget / timeRate);
           milesWeCanDo = Math.min(Math.max(milesWeCanDo, 0), remainingLegMiles);
+
+          if (milesWeCanDo < 1e-9) break;
 
           const campOffset = legOffset + milesWeCanDo;
           current.legs.push(this.legLabel(leg, legIndex));
@@ -248,7 +270,7 @@ function tripPlanner() {
     },
 
     get dayPlanRows() {
-      const { days, camps } = this.dayPlan;
+      const { days, camps } = this.computedPlan;
       const rows = [];
       days.forEach((day, i) => {
         const methodParts = Object.entries(day.milesPerMethod)
@@ -275,6 +297,8 @@ function tripPlanner() {
       this.travelMethods = [...this.defaultTravelMethods];
       this.dailyMaxMiles = '';
       this.dailyMaxGain = '';
+      this.dailyMaxHours = '';
+      this.computedPlan = { days: [], camps: [] };
       localStorage.removeItem("savedTrip");
     },
 
@@ -290,6 +314,8 @@ function tripPlanner() {
         if (data.legs) this.legs = data.legs;
         this.dailyMaxMiles = data.dailyMaxMiles || '';
         this.dailyMaxGain = data.dailyMaxGain || '';
+        this.dailyMaxHours = data.dailyMaxHours || '';
+        if (data.computedPlan) this.computedPlan = data.computedPlan;
       } else {
         this.legs = [...this.defaultLegs];
         this.travelMethods = [...this.defaultTravelMethods];
