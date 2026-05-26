@@ -172,10 +172,16 @@
                     <td class="whitespace-nowrap w-20 px-2 font-medium" :class="row.type === 'day' ? 'pt-2 pb-1' : 'pt-0 pb-1'" x-text="row.type === 'day' ? `Day ${row.n}` : ''"></td>
                     <td class="px-2" :class="row.type === 'day' ? 'pt-2 pb-1' : 'pt-0 pb-1'">
                       <div x-show="row.type === 'day'">
-                        <div x-text="row.summary"></div>
+                        <div class="flex flex-wrap">
+                          <template x-for="(part, pi) in row.summaryParts" :key="pi">
+                            <span>
+                              <span x-show="pi > 0">; </span><span :class="part.highlight ? 'bg-yellow-100 rounded px-0.5' : ''" x-text="part.text"></span><span x-show="part.suffix" x-text="part.suffix"></span>
+                            </span>
+                          </template>
+                        </div>
                         <div x-text="row.legs"></div>
                       </div>
-                      <span x-show="row.type === 'camp'" x-text="row.text"></span>
+                      <span x-show="row.type === 'camp'" x-text="row.text" class="italic"></span>
                     </td>
                   </tr>
                 </template>

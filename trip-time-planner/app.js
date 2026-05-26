@@ -1,7 +1,7 @@
 function tripPlanner() {
   return {
-    savedTitle: null,     // name currently persisted in tripPlans
-    editingTitle: '',     // value in the name input
+    savedTitle: null, // name currently persisted in tripPlans
+    editingTitle: "", // value in the name input
     isEditingTitle: false, // true when in rename mode
 
     defaultLegs: [
@@ -17,9 +17,9 @@ function tripPlanner() {
     legs: [],
     travelMethods: [],
     savedTripsList: [],
-    dailyMaxMiles: '',
-    dailyMaxGain: '',
-    dailyMaxHours: '',
+    dailyMaxMiles: "",
+    dailyMaxGain: "",
+    dailyMaxHours: "",
     computedPlan: { days: [], camps: [] },
 
     // ── Name management ───────────────────────────────────────────────
@@ -35,7 +35,13 @@ function tripPlanner() {
         delete plans[this.savedTitle];
       }
 
-      plans[name] = { legs: this.legs, travelMethods: this.travelMethods, dailyMaxMiles: this.dailyMaxMiles, dailyMaxGain: this.dailyMaxGain, dailyMaxHours: this.dailyMaxHours };
+      plans[name] = {
+        legs: this.legs,
+        travelMethods: this.travelMethods,
+        dailyMaxMiles: this.dailyMaxMiles,
+        dailyMaxGain: this.dailyMaxGain,
+        dailyMaxHours: this.dailyMaxHours,
+      };
       localStorage.setItem("tripPlans", JSON.stringify(plans));
       this.savedTripsList = Object.keys(plans);
       this.savedTitle = name;
@@ -60,21 +66,30 @@ function tripPlanner() {
       this.saveSessionState();
       if (!this.savedTitle) return;
       const plans = JSON.parse(localStorage.getItem("tripPlans") || "{}");
-      plans[this.savedTitle] = { legs: this.legs, travelMethods: this.travelMethods, dailyMaxMiles: this.dailyMaxMiles, dailyMaxGain: this.dailyMaxGain, dailyMaxHours: this.dailyMaxHours };
-      localStorage.setItem("tripPlans", JSON.stringify(plans));
-    },
-
-    saveSessionState() {
-      localStorage.setItem("savedTrip", JSON.stringify({
-        savedTitle: this.savedTitle,
-        editingTitle: this.editingTitle,
+      plans[this.savedTitle] = {
         legs: this.legs,
         travelMethods: this.travelMethods,
         dailyMaxMiles: this.dailyMaxMiles,
         dailyMaxGain: this.dailyMaxGain,
         dailyMaxHours: this.dailyMaxHours,
-        computedPlan: this.computedPlan,
-      }));
+      };
+      localStorage.setItem("tripPlans", JSON.stringify(plans));
+    },
+
+    saveSessionState() {
+      localStorage.setItem(
+        "savedTrip",
+        JSON.stringify({
+          savedTitle: this.savedTitle,
+          editingTitle: this.editingTitle,
+          legs: this.legs,
+          travelMethods: this.travelMethods,
+          dailyMaxMiles: this.dailyMaxMiles,
+          dailyMaxGain: this.dailyMaxGain,
+          dailyMaxHours: this.dailyMaxHours,
+          computedPlan: this.computedPlan,
+        }),
+      );
     },
 
     loadNamedTrip(name) {
@@ -86,9 +101,9 @@ function tripPlanner() {
       this.isEditingTitle = false;
       this.legs = trip.legs;
       this.travelMethods = trip.travelMethods;
-      this.dailyMaxMiles = trip.dailyMaxMiles || '';
-      this.dailyMaxGain = trip.dailyMaxGain || '';
-      this.dailyMaxHours = trip.dailyMaxHours || '';
+      this.dailyMaxMiles = trip.dailyMaxMiles || "";
+      this.dailyMaxGain = trip.dailyMaxGain || "";
+      this.dailyMaxHours = trip.dailyMaxHours || "";
       this.computedPlan = { days: [], camps: [] };
       this.saveSessionState();
     },
@@ -101,7 +116,7 @@ function tripPlanner() {
       this.savedTripsList = Object.keys(plans);
       if (this.savedTitle === name) {
         this.savedTitle = null;
-        this.editingTitle = '';
+        this.editingTitle = "";
         this.saveSessionState();
       }
     },
@@ -196,7 +211,7 @@ function tripPlanner() {
       let legOffset = 0;
 
       const accumulate = (leg, miles, gain) => {
-        const method = this.travelMethods.find(m => m.name === leg.method);
+        const method = this.travelMethods.find((m) => m.name === leg.method);
         const mpm = method ? parseFloat(method.minutesPerMile || 0) : 0;
         const mp1k = method ? parseFloat(method.minutesPer1000ft || 0) : 0;
         if (!current.milesPerMethod[leg.method]) current.milesPerMethod[leg.method] = 0;
@@ -220,7 +235,7 @@ function tripPlanner() {
           continue;
         }
 
-        const method = this.travelMethods.find(m => m.name === leg.method);
+        const method = this.travelMethods.find((m) => m.name === leg.method);
         const mpm = method ? parseFloat(method.minutesPerMile || 0) : 0;
         const mp1k = method ? parseFloat(method.minutesPer1000ft || 0) : 0;
         const remainingLegTime = (remainingLegMiles * mpm + (remainingLegGain / 1000) * mp1k) / 60;
@@ -229,7 +244,11 @@ function tripPlanner() {
         const gainBudget = isFinite(maxGain) ? maxGain - dayGain : Infinity;
         const timeBudget = isFinite(maxHours) ? maxHours - current.time : Infinity;
 
-        if (remainingLegMiles <= milesBudget + 1e-9 && remainingLegGain <= gainBudget + 1e-9 && remainingLegTime <= timeBudget + 1e-9) {
+        if (
+          remainingLegMiles <= milesBudget + 1e-9 &&
+          remainingLegGain <= gainBudget + 1e-9 &&
+          remainingLegTime <= timeBudget + 1e-9
+        ) {
           current.legs.push(this.legLabel(leg, legIndex));
           accumulate(leg, remainingLegMiles, remainingLegGain);
           dayMiles += remainingLegMiles;
@@ -237,18 +256,25 @@ function tripPlanner() {
           legIndex++;
           legOffset = 0;
         } else {
-          let milesWeCanDo = isFinite(milesBudget) ? milesBudget : remainingLegMiles;
-          if (isFinite(gainBudget) && gainRate > 0) milesWeCanDo = Math.min(milesWeCanDo, gainBudget / gainRate);
-          const timeRate = (mpm + gainRate * mp1k / 1000) / 60;
-          if (isFinite(timeBudget) && timeRate > 0) milesWeCanDo = Math.min(milesWeCanDo, timeBudget / timeRate);
+          const timeRate = (mpm + (gainRate * mp1k) / 1000) / 60;
+          const milesLimit = isFinite(milesBudget) ? milesBudget : Infinity;
+          const gainLimit = isFinite(gainBudget) && gainRate > 0 ? gainBudget / gainRate : Infinity;
+          const timeLimit = isFinite(timeBudget) && timeRate > 0 ? timeBudget / timeRate : Infinity;
+          let milesWeCanDo = Math.min(milesLimit, gainLimit, timeLimit);
           milesWeCanDo = Math.min(Math.max(milesWeCanDo, 0), remainingLegMiles);
 
           if (milesWeCanDo < 1e-9) break;
 
+          const limitedBy = {
+            miles: isFinite(milesLimit) && milesLimit <= milesWeCanDo + 1e-9,
+            gain: isFinite(gainLimit) && gainLimit <= milesWeCanDo + 1e-9,
+            hours: isFinite(timeLimit) && timeLimit <= milesWeCanDo + 1e-9,
+          };
+
           const campOffset = legOffset + milesWeCanDo;
           current.legs.push(this.legLabel(leg, legIndex));
           accumulate(leg, milesWeCanDo, milesWeCanDo * gainRate);
-          days.push({ ...current, milesPerMethod: { ...current.milesPerMethod } });
+          days.push({ ...current, milesPerMethod: { ...current.milesPerMethod }, limitedBy });
 
           if (Math.abs(campOffset - totalLegMiles) < 1e-9) {
             camps.push(`after ${this.legLabel(leg, legIndex)}`);
@@ -273,14 +299,21 @@ function tripPlanner() {
       const { days, camps } = this.computedPlan;
       const rows = [];
       days.forEach((day, i) => {
-        const methodParts = Object.entries(day.milesPerMethod)
+        const totalMiles = Object.values(day.milesPerMethod).reduce((s, m) => s + m, 0);
+        const methodBreakdown = Object.entries(day.milesPerMethod)
           .map(([method, miles]) => `${miles.toFixed(1)} ${method}`)
-          .join(', ');
-        const summary = [methodParts, `${Math.round(day.gain)} gain`, `${day.time.toFixed(1)} hrs`]
-          .filter(Boolean).join(', ');
-        rows.push({ type: 'day', n: i + 1, summary, legs: day.legs.join(', ') });
+          .join(", ");
+        const milesSuffix = Object.keys(day.milesPerMethod).length > 1 ? ` (${methodBreakdown})` : "";
+        const summaryParts = [
+          { text: `${totalMiles.toFixed(1)} miles`, suffix: milesSuffix, highlight: !!day.limitedBy?.miles },
+          ...(Math.round(day.gain) > 0
+            ? [{ text: `${Math.round(day.gain)} gain`, highlight: !!day.limitedBy?.gain }]
+            : []),
+          { text: `${day.time.toFixed(1)} hours`, highlight: !!day.limitedBy?.hours },
+        ];
+        rows.push({ type: "day", n: i + 1, summaryParts, legs: day.legs.join(", ") });
         if (i < camps.length) {
-          rows.push({ type: 'camp', n: i + 1, text: `⛺ Camp ${i + 1}: ${camps[i]}` });
+          rows.push({ type: "camp", n: i + 1, text: `Camp ${i + 1}: ${camps[i]}` });
         }
       });
       return rows;
@@ -291,13 +324,13 @@ function tripPlanner() {
     clearTrip() {
       if (!this.savedTitle && !confirm("Are you sure you want to clear all trip data?")) return;
       this.savedTitle = null;
-      this.editingTitle = '';
+      this.editingTitle = "";
       this.isEditingTitle = false;
       this.legs = [...this.defaultLegs];
       this.travelMethods = [...this.defaultTravelMethods];
-      this.dailyMaxMiles = '';
-      this.dailyMaxGain = '';
-      this.dailyMaxHours = '';
+      this.dailyMaxMiles = "";
+      this.dailyMaxGain = "";
+      this.dailyMaxHours = "";
       this.computedPlan = { days: [], camps: [] };
       localStorage.removeItem("savedTrip");
     },
@@ -309,12 +342,12 @@ function tripPlanner() {
       if (savedTrip) {
         const data = JSON.parse(savedTrip);
         this.savedTitle = data.savedTitle || null;
-        this.editingTitle = data.editingTitle || '';
+        this.editingTitle = data.editingTitle || "";
         if (data.travelMethods) this.travelMethods = data.travelMethods;
         if (data.legs) this.legs = data.legs;
-        this.dailyMaxMiles = data.dailyMaxMiles || '';
-        this.dailyMaxGain = data.dailyMaxGain || '';
-        this.dailyMaxHours = data.dailyMaxHours || '';
+        this.dailyMaxMiles = data.dailyMaxMiles || "";
+        this.dailyMaxGain = data.dailyMaxGain || "";
+        this.dailyMaxHours = data.dailyMaxHours || "";
         if (data.computedPlan) this.computedPlan = data.computedPlan;
       } else {
         this.legs = [...this.defaultLegs];
