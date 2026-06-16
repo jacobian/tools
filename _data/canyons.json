@@ -1,5 +1,34 @@
 [
   {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding, below the quad to the crossing",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-08",
+    "type": "day trip"
+  },
+  {
+    "type": "expedition",
+    "name": "Wild Sky Canyon Swiftwater Rescue",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-03",
+    "canyons": [
+      {
+        "canyon": "Hagar",
+        "link": "https://ropewiki.com/Hager_Canyon",
+        "region": "PNW",
+        "class": "C",
+        "flow": "mod-high",
+        "notes": "3 days in Hagar running various SWR rescue scenarios",
+        "display_date": "June 2026",
+        "sort_date": "2026-06-03"
+      }
+    ]
+  },
+  {
     "canyon": "Dog",
     "link": "https://ropewiki.com/Dog_Creek",
     "region": "PNW",

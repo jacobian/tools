@@ -1,8 +1,8 @@
 {
-  "total": 62,
+  "total": 64,
   "unique_total": 48,
   "by_class": {
-    "C": 46,
+    "C": 48,
     "A": 9,
     "B": 7
   },
