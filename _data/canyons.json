@@ -1,5 +1,27 @@
 [
   {
+    "canyon": "Eagle (lower)",
+    "link": "https://ropewiki.com/Eagle_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "Eagle's more lovely after the flood. Some difficulty with a party member who swam poorly, needed some assistance with the swims",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-19",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding, quad to crossing",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-18",
+    "type": "day trip"
+  },
+  {
     "canyon": "Duncan",
     "link": "https://ropewiki.com/Duncan_Creek",
     "region": "PNW",
@@ -399,7 +421,7 @@
   },
   {
     "canyon": "Eagle (Lower)",
-    "link": null,
+    "link": "https://ropewiki.com/Eagle_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "low",
@@ -487,7 +509,7 @@
   },
   {
     "canyon": "Eagle (Full)",
-    "link": null,
+    "link": "https://ropewiki.com/Eagle_Creek",
     "region": "PNW",
     "class": "C",
     "flow": "mod-high?",
