@@ -1,5 +1,159 @@
 [
   {
+    "canyon": "Pin",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-low",
+    "notes": "Guiding. Flow up a bit from recent rains. Great group, good close-out for the season",
+    "display_date": "September 2026",
+    "sort_date": "2026-09-12",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Eagle",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "w/Andrew, scouting for next year",
+    "display_date": "September 2026",
+    "sort_date": "2026-09-11",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Damnation",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-high",
+    "notes": "Great practice raps in the flow, and one hydraulic on R1. Very long day again - long creek walks and tricky downclimbs. Want to run this again, was super-fun and would be better a second time. Injured knee (grade 1-2 MCL sprain) at some point",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-29",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Thorton",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod",
+    "notes": "Upper and middle. Very long day. Semi-lead, w/Alex+Lori as other leads plus Sarah, Danille",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-28",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Suiattle Falls",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "v-low",
+    "notes": "Lead/teach Danielle + Josh. Essentially a Class B, almost no flow, but incredibly fun - 22 raps, mostly back to back with almost no creek walking",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-27",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Pilot",
+    "link": null,
+    "region": "PNW",
+    "class": "B",
+    "flow": "-",
+    "notes": "Lead/teach - Daneille + Josh",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-26",
+    "type": "day trip"
+  },
+  {
+    "canyon": "O'Toole",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Lead/teach - Daneille + Josh",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-26",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Pin",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-17",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Pin",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-16",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Davis",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Mazmas climb leader / board show & tell, super fun",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-15",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Pin",
+    "link": null,
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-08",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding",
+    "display_date": "August 2026",
+    "sort_date": "2026-08-07",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Three Corner",
+    "link": "https://ropewiki.com/Three_Corner_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Class trip. Something of a shit-show, difficult student. Kept everyone safe, nice.",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-28",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "mod-high",
+    "notes": "Class trip. Surprisingly high water, hydraulics in the bathtub",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-27",
+    "type": "day trip"
+  },
+  {
     "canyon": "Eagle (lower)",
     "link": "https://ropewiki.com/Eagle_Creek",
     "region": "PNW",
@@ -19,6 +173,17 @@
     "notes": "Guiding, quad to crossing",
     "display_date": "June 2026",
     "sort_date": "2026-06-18",
+    "type": "day trip"
+  },
+  {
+    "canyon": "Duncan",
+    "link": "https://ropewiki.com/Duncan_Creek",
+    "region": "PNW",
+    "class": "C",
+    "flow": "low",
+    "notes": "Guiding",
+    "display_date": "June 2026",
+    "sort_date": "2026-06-12",
     "type": "day trip"
   },
   {

@@ -1,14 +1,14 @@
 {
-  "total": 66,
-  "unique_total": 49,
+  "total": 81,
+  "unique_total": 56,
   "by_class": {
-    "C": 50,
-    "A": 9,
-    "B": 7
+    "C": 64,
+    "B": 8,
+    "A": 9
   },
   "unique_by_class": {
-    "C": 33,
-    "A": 9,
-    "B": 7
+    "C": 39,
+    "B": 8,
+    "A": 9
   }
 }
