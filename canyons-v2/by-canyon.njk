@@ -1,0 +1,51 @@
+---
+layout: canyons.njk
+title: JKM - Canyons
+permalink: /canyons-v2/by-canyon/
+---
+
+{% macro cell(value) %}
+  {%- if value -%}{{ value }}{%- else -%}<span class="empty">—</span>{%- endif -%}
+{% endmacro %}
+
+{% macro canyon_name(canyon) %}
+  {%- if canyon.url -%}<a href="{{ canyon.url }}">{{ canyon.name }}</a>
+  {%- else -%}{{ canyon.name }}{%- endif -%}
+{% endmacro %}
+
+<table class="canyons">
+  <thead>
+    <tr>
+      <th>Canyon</th>
+      <th>Region</th>
+      <th>Date</th>
+      <th>Role</th>
+      <th>Flow</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in canyonlog.byCanyon %}
+      {% set stripe = "bg-stone-50" if loop.index % 2 == 0 else "bg-white" %}
+
+      {% for d in row.descents %}
+        <tr class="{{ stripe }}">
+          {% if loop.first %}
+            <td class="canyon-title" rowspan="{{ row.descents | length }}">
+              <h3>{{ canyon_name(row.canyon) }}</h3>
+              <p>
+                {{ row.count }} descent{{ "s" if row.count != 1 }}{% if row.formalCount %},
+                {{ row.formalCount }} as guide{% endif %}
+              </p>
+            </td>
+            <td class="region" rowspan="{{ row.descents | length }}">{{ cell(row.canyon.region) }}</td>
+          {% endif %}
+          <td class="date">{{ d.date.display }}</td>
+          {# Blank, not a dash: most canyons have no named variants, which is
+             normal rather than missing information. #}
+          <td class="role">{{ d.role }}</td>
+          <td class="flow">{{ cell(d.flow) }}</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>

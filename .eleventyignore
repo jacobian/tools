@@ -1,0 +1,4 @@
+# Internal notes, not site content. Eleventy would otherwise render this as a
+# Liquid template and publish it at /CLAUDE/ -- which also means any {{ ... }}
+# example written in it becomes a template tag and can break the build.
+CLAUDE.md

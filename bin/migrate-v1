@@ -1,0 +1,346 @@
+#!/usr/bin/env -S uv run --script
+"""Rebuild data/canyons.db from the v1 Google Sheet.
+
+Re-runnable: drops and recreates the database every time, so the guessing rules
+below can be iterated on until the output looks right. The v1 sheet stays the
+source until cutover; after that this script is only history.
+
+Reads the raw CSV rather than _data/canyons.json because the JSON has already
+thrown away the original date strings -- it collapses everything to month
+precision and encodes an unknown day as the 15th, which is indistinguishable
+from a real trip on the 15th. The CSV still has the "??" markers, so date
+precision survives the trip.
+
+Roles and events are inferred from the notes prose and are guesses. They are
+applied silently; clean them up by hand afterwards.
+"""
+
+import argparse
+import csv
+import io
+import re
+import sqlite3
+import urllib.request
+from datetime import date
+from pathlib import Path
+
+ROOT = Path(__file__).parent.parent
+SCHEMA = ROOT / "data" / "schema.sql"
+DB = ROOT / "data" / "canyons.db"
+
+SHEET_ID = "1S2Ik2kmfm-CI7mXaWe8nlGlPAGZ3oZ7U0Af9qZoiRRg"
+URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
+
+
+# --- dates ---------------------------------------------------------------
+
+def parse_day(s: str) -> date | None:
+    """Parse one messy v1 date into an exact day, or None.
+
+    Adapted from bin/fetch-canyons. Handles M/D/YYYY, M/D/YY, and the
+    missing-slash M/DYY that "7/??24" becomes once ?? is substituted.
+    """
+    def make(month: int, day: int, year: int) -> date | None:
+        if year < 100:
+            year += 2000
+        try:
+            return date(year, month, day)
+        except ValueError:
+            return None
+
+    s = s.strip().replace("??", "15")
+
+    for pattern in (r"(\d{1,2})/(\d{1,2})/(\d{4})",
+                    r"(\d{1,2})/(\d{1,2})/(\d{2})",
+                    r"(\d{1,2})/(\d{1,2})(\d{2})"):
+        if m := re.fullmatch(pattern, s):
+            return make(int(m[1]), int(m[2]), int(m[3]))
+
+    # Garbled, e.g. "65??/24": take a valid month off the front, year off the end.
+    m_mo = re.match(r"^(1[0-2]|[1-9])", s)
+    m_yr = re.search(r"(\d{2})$", s)
+    if m_mo and m_yr:
+        return make(int(m_mo[1]), 15, int(m_yr[1]))
+    return None
+
+
+def parse_date(raw: str) -> tuple[str | None, tuple[str, str] | None]:
+    """Return (descent date, event range) for a v1 date cell.
+
+    A range like "5/6/24 - 5/12/24" means several canyons were done somewhere
+    inside those days and we don't know which day each was. Recording the range
+    start as the descent date would invent precision we don't have, so the
+    descent gets month precision and the exact range goes on the event.
+    """
+    raw = raw.strip()
+
+    if " - " in raw:
+        first, last = (p.strip() for p in raw.split(" - ", 1))
+        start, end = parse_day(first), parse_day(last)
+        if start is None:
+            return None, None
+        span = (start.isoformat(), (end or start).isoformat())
+        return f"{start.year:04d}-{start.month:02d}", span
+
+    d = parse_day(raw)
+    if d is None:
+        return None, None
+    if "??" in raw:                      # day unknown
+        return f"{d.year:04d}-{d.month:02d}", None
+    return d.isoformat(), None
+
+
+# --- canyon names --------------------------------------------------------
+
+ROUTE_RE = re.compile(r"\s*\((full|lower|upper|main|middle)\)\s*$", re.I)
+
+
+def split_name(raw: str) -> tuple[str, str | None, str | None]:
+    """Split a v1 canyon cell into (name, route, condition).
+
+    "Fulton (Full)"  -> ("Fulton", "Full", None)
+    "Dark (bailed)"  -> ("Dark", None, "bailed")   -- an outcome, not a route
+    """
+    name = raw.strip()
+    condition = None
+    if name.lower().endswith("(bailed)"):
+        name = name[: -len("(bailed)")].strip()
+        condition = "bailed"
+    route = None
+    if m := ROUTE_RE.search(name):
+        route = m[1].capitalize()
+        name = ROUTE_RE.sub("", name).strip()
+    return name, route, condition
+
+
+# --- flow ----------------------------------------------------------------
+
+FLOW = {
+    "low": "low", "low?": "low", "v-low": "low",
+    "mod": "mod",
+    "mod-low": "mod-low", "low-mod": "mod-low", "mod/mod-low": "mod-low",
+    "mod-high": "mod-high", "mod-high?": "mod-high", "mid-high": "mod-high",
+    "high": "high", "high?": "high",
+}
+# Descriptions of conditions that ended up in the flow column.
+FLOW_AS_CONDITION = {"ice!", "potholes full"}
+
+
+def parse_flow(raw: str) -> tuple[str | None, str | None]:
+    """Return (flow, condition) for a v1 flow cell."""
+    s = raw.strip().lower()
+    if s in FLOW_AS_CONDITION:
+        return None, raw.strip()
+    return FLOW.get(s), None          # "-", "?" and blanks all mean unknown
+
+
+# --- roles and events ----------------------------------------------------
+
+# Ordered: the first pattern to match wins.
+#
+#   "guiding" and "lead/teach" are anchored to the start of the note, where they
+#   are Jacob labelling his own role. Mid-sentence they are usually about
+#   somebody else -- "Trey wanted to practice some guiding technique, I came
+#   along to see what he did" is not Jacob guiding.
+#
+#   "led" beats "assistant" because "Led a couple of new assistants" makes him
+#   the leader, not the assistant. (It does not match inside "bailed".)
+#
+#   Both beat the bare word "class": "mazamas class trip - assistant leader" is
+#   an assistant, not a student.
+#
+#   "assistan[dt]" deliberately will not match "assistance".
+ROLE_RULES = [
+    (re.compile(r"\bsemi-lead\b", re.I), "peer leader"),
+    (re.compile(r"^\s*guiding\b|^\s*lead/teach\b|\bled\b", re.I), "lead guide"),
+    (re.compile(r"assistan[dt]", re.I), "assistant guide"),
+]
+
+CLASS_RE = re.compile(r"class trip|class #|for class", re.I)
+
+EVENT_RULES = [
+    (re.compile(r"class trip|class #", re.I), "Mazamas Canyoneering Class"),
+    (re.compile(r"campout", re.I), "Mazamas Campout"),
+    (re.compile(r"\bpnw\b.{0,3}\brond[ey]\b|\bpnw\b.{0,3}\brody\b", re.I), "PNW Rondy"),
+    (re.compile(r"practice trip", re.I), "Mazamas Leader Practice"),
+]
+
+# Leading "mazamas campout." / "pnw rondy - assistant leader." / "Guiding,"
+# labels, now that the same information lives in the event and role columns.
+# Applied repeatedly, because these stack: "pnw rody - assistant leader. amazing"
+# needs two passes to get down to "amazing".
+PREFIX_RES = [
+    re.compile(r"^\s*(?:maz?[ao]?mas|pnw)\b[^.]{0,60}?(?:\s*[-,]\s*|\.\s+|\.\s*$|$)", re.I),
+    re.compile(r"^\s*assistan[dt]\s+leader\b[\s.,:-]*", re.I),
+    re.compile(r"^\s*lead/teach\b[\s.,:-]*", re.I),
+    re.compile(r"^\s*guiding\b[\s.,:-]*", re.I),
+    re.compile(r"^\s*class trips?\b[\s.,:#0-9-]*", re.I),
+]
+
+
+def infer_role(notes: str, year: int) -> str:
+    for pattern, role in ROLE_RULES:
+        if pattern.search(notes):
+            return role
+    if CLASS_RE.search(notes):
+        # 2023 is Jacob's own student year; later class trips are him helping teach.
+        return "student" if year <= 2023 else "assistant guide"
+    return "participant"
+
+
+def infer_event(notes: str, year: int) -> str | None:
+    for pattern, name in EVENT_RULES:
+        if pattern.search(notes):
+            return f"{name} {year}"
+    return None
+
+
+def strip_prefix(notes: str) -> str:
+    """Peel off labels that are now structured columns. May empty the note."""
+    while True:
+        for pattern in PREFIX_RES:
+            stripped = pattern.sub("", notes, count=1)
+            if stripped != notes:
+                notes = stripped
+                break
+        else:
+            return notes.strip()
+
+
+# --- build ---------------------------------------------------------------
+
+def load_rows(csv_path: Path | None) -> list[dict]:
+    if csv_path:
+        content = csv_path.read_text()
+    else:
+        print(f"Fetching {URL} ...")
+        with urllib.request.urlopen(URL) as resp:
+            content = resp.read().decode("utf-8")
+    return list(csv.DictReader(io.StringIO(content)))
+
+
+def canyon_key(name: str) -> str:
+    return name.lower()
+
+
+def build_canyons(rows: list[dict]) -> tuple[dict[str, dict], dict[str, str]]:
+    """Collect canyons, merging rows that differ only by a misspelling.
+
+    Returns (canyons by key, alias -> key). Two spellings that link to the same
+    URL are the same canyon ("Ollalie" and "Olallie" both point at
+    ropewiki.com/Olallie_Creek). The surviving spelling is the one the URL slug
+    agrees with, which picks "Olallie" over the transposed "Ollalie".
+    """
+    canyons: dict[str, dict] = {}
+    for row in rows:
+        name, _, _ = split_name(row["canyon"])
+        key = canyon_key(name)
+        c = canyons.setdefault(key, {
+            "name": name, "region": row["region"].strip(),
+            "url": None, "aca_rating": None,
+        })
+        if url := row["link"].strip():
+            c["url"] = url
+        if cls := row["class"].strip():
+            # v1 stores water class per row; it's a property of the canyon.
+            c["aca_rating"] = cls
+
+    # Merge canyons sharing a URL.
+    by_url: dict[str, list[str]] = {}
+    for key, c in canyons.items():
+        if c["url"]:
+            by_url.setdefault(c["url"], []).append(key)
+
+    aliases: dict[str, str] = {}
+    for url, keys in by_url.items():
+        if len(keys) < 2:
+            continue
+        slug = url.rstrip("/").rsplit("/", 1)[-1].replace("_", " ").lower()
+        winner = next((k for k in keys if slug.startswith(k)), keys[0])
+        for k in keys:
+            if k != winner:
+                aliases[k] = winner
+                del canyons[k]
+
+    return canyons, aliases
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--csv", type=Path, help="read this CSV instead of fetching the sheet")
+    args = ap.parse_args()
+
+    rows = load_rows(args.csv)
+
+    DB.unlink(missing_ok=True)
+    db = sqlite3.connect(DB)
+    db.executescript(SCHEMA.read_text())
+
+    canyons, aliases = build_canyons(rows)
+    canyon_ids: dict[str, int] = {}
+    for key, c in canyons.items():
+        cur = db.execute(
+            "INSERT INTO canyon (name, region, aca_rating, url) VALUES (?, ?, ?, ?)",
+            (c["name"], c["region"], c["aca_rating"], c["url"]),
+        )
+        canyon_ids[key] = cur.lastrowid
+
+    event_ids: dict[str, int] = {}
+    event_spans: dict[int, tuple[str, str]] = {}
+
+    def event_id(name: str, span: tuple[str, str] | None) -> int:
+        if name not in event_ids:
+            cur = db.execute("INSERT INTO event (name) VALUES (?)", (name,))
+            event_ids[name] = cur.lastrowid
+        eid = event_ids[name]
+        if span:
+            have = event_spans.get(eid)
+            event_spans[eid] = span if not have else (min(have[0], span[0]), max(have[1], span[1]))
+        return eid
+
+    skipped = []
+    for row in rows:
+        when, span = parse_date(row["date"])
+        if when is None:
+            skipped.append(row)
+            continue
+        year = int(when[:4])
+
+        name, route, name_condition = split_name(row["canyon"])
+        key = canyon_key(name)
+        key = aliases.get(key, key)
+
+        flow, flow_condition = parse_flow(row["flow"])
+        conditions = name_condition or flow_condition
+
+        notes = row["notes"].strip()
+        role = infer_role(notes, year)
+
+        expedition = row["expedition"].strip()
+        name_of_event = expedition or infer_event(notes, year)
+        eid = event_id(name_of_event, span) if name_of_event else None
+
+        db.execute(
+            """INSERT INTO descent
+               (canyon_id, event_id, date, route, role, flow, conditions, notes)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            (canyon_ids[key], eid, when, route, role, flow, conditions,
+             strip_prefix(notes) or None),
+        )
+
+    for eid, (start, end) in event_spans.items():
+        db.execute("UPDATE event SET start_date = ?, end_date = ? WHERE id = ?",
+                   (start, end, eid))
+
+    db.commit()
+
+    n_canyons = db.execute("SELECT count(*) FROM canyon").fetchone()[0]
+    n_descents = db.execute("SELECT count(*) FROM descent").fetchone()[0]
+    n_events = db.execute("SELECT count(*) FROM event").fetchone()[0]
+    print(f"Wrote {n_descents} descents, {n_canyons} canyons, {n_events} events to {DB}")
+    for row in skipped:
+        print(f"  SKIPPED (unparseable date {row['date']!r}): {row['canyon']}")
+
+
+if __name__ == "__main__":
+    main()

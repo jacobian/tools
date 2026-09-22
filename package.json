@@ -1,0 +1,16 @@
+{
+  "name": "tools-jacobian-org",
+  "private": true,
+  "description": "Static site for tools.jacobian.org. Present only to pin Node and Eleventy for the build host; the site itself has no runtime JS dependencies.",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.6"
+  }
+}
