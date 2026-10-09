@@ -110,7 +110,7 @@
     </style>
   </head>
   <body class="bg-white text-black font-sans text-sm">
-    <div class="mx-auto max-w-7xl p-6 flex items-start gap-10">
+    <div class="mx-auto max-w-[110rem] p-6 flex items-start gap-10">
       <div class="flex-1 min-w-0">
         <header class="flex items-center gap-2 mb-6">
           <h1 class="font-bold mr-3">Year Planner</h1>
@@ -139,6 +139,9 @@
     <form id="editor" class="fixed z-10 w-64 grid gap-3 p-3 bg-white border-2 border-black" hidden>
       <input name="title" placeholder="Title" autocomplete="off" required class="border border-black px-2 py-1 font-bold" />
       <div id="editor-colors" class="flex flex-wrap gap-2 p-1"></div>
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input name="tentative" type="checkbox" class="accent-black" /> Tentative
+      </label>
       <div class="flex gap-2">
         <button type="submit" class="btn">Save</button>
         <button type="button" id="cancel" class="btn">Cancel</button>
@@ -178,9 +181,9 @@
       const status = $("status");
       const tip = $("tip");
 
-      // state.events: [{id, title, start, end, color}], dates as inclusive
-      // "YYYY-MM-DD" strings (which compare correctly as strings); color is a
-      // state.colors id. state.colors: [{id, bg, name}]. state.color: the id
+      // state.events: [{id, title, start, end, color, tentative}], dates as
+      // inclusive "YYYY-MM-DD" strings (which compare correctly as strings);
+      // color is a state.colors id. state.colors: [{id, bg, name}]. state.color: the id
       // new events get.
       const state = load();
       const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -278,6 +281,19 @@
         node.style.color = inkOn(bg);
       }
 
+      const colorOf = (ev) => state.colors.find((c) => c.id === ev.color) ?? state.colors[0];
+
+      // A committed event is solid. A tentative one is hatched: thin diagonal
+      // stripes of the same color over a pale tint of it, both light enough
+      // for black text.
+      function paintEvent(node, ev) {
+        const { bg } = colorOf(ev);
+        if (!ev.tentative) return paint(node, bg);
+        const tint = (percent) => `color-mix(in srgb, ${bg} ${percent}%, white)`;
+        node.style.background = `repeating-linear-gradient(135deg, ${tint(60)} 0 2px, ${tint(15)} 2px 9px)`;
+        node.style.color = "#000";
+      }
+
       function render() {
         yearInput.value = year;
         tip.hidden = true;
@@ -325,11 +341,12 @@
           if (lane < 0) lane = lanes.length;
           lanes[lane] = e;
 
-          const color = state.colors.find((c) => c.id === ev.color) ?? state.colors[0];
           const bar = el("div", "bar", ev.title);
           bar.dataset.id = ev.id;
-          bar.dataset.tip = [ev.title, describe(ev.start, ev.end), color.name].filter(Boolean).join(" · ");
-          paint(bar, color.bg);
+          bar.dataset.tip = [ev.title, describe(ev.start, ev.end), colorOf(ev).name, ev.tentative && "tentative"]
+            .filter(Boolean)
+            .join(" · ");
+          paintEvent(bar, ev);
           bar.style.gridColumn = `${column(s)} / ${column(e) + 1}`;
           bar.style.gridRow = lane + 2;
           bar.classList.toggle("from-prev", ev.start < weekStart);
@@ -343,7 +360,7 @@
           day.append(el("span", "num", d));
           day.dataset.date = date;
           day.style.gridColumn = column(d);
-          day.style.gridRow = `1 / span ${Math.max(lanes.length, 1) + 1}`;
+          day.style.gridRow = `1 / span ${Math.max(lanes.length, 2) + 1}`;
           day.classList.toggle("today", date === today);
           day.classList.toggle("holiday", holidays.has(date));
           if (holidays.has(date)) day.dataset.tip = holidays.get(date);
@@ -426,11 +443,10 @@
         const rows = events
           .filter((ev) => ev.end >= iso(year, 0, 1) && ev.start <= iso(year, 11, 31))
           .map((ev) => {
-            const color = state.colors.find((c) => c.id === ev.color) ?? state.colors[0];
             const row = el("li", "event-row");
             row.dataset.id = ev.id;
             const chip = el("span", "chip");
-            chip.style.background = color.bg;
+            paintEvent(chip, ev);
             const dates = ev.start === ev.end ? monthDay(ev.start) : `${monthDay(ev.start)}–${monthDay(ev.end)}`;
             row.append(chip, el("span", "title", ev.title), el("span", "dates", dates));
             return row;
@@ -467,6 +483,7 @@
           }),
         );
         editor.elements.title.value = ev.title;
+        editor.elements.tentative.checked = !!ev.tentative;
         $("delete").hidden = !state.events.includes(ev);
         paintSelection(ev.start, ev.end);
 
@@ -484,7 +501,11 @@
         if (editor.hidden) return;
         const title = editor.elements.title.value.trim();
         if (commit && title) {
-          Object.assign(editing, { title, color: editor.elements.color.value || editing.color });
+          Object.assign(editing, {
+            title,
+            color: editor.elements.color.value || editing.color,
+            tentative: editor.elements.tentative.checked,
+          });
           if (!state.events.includes(editing)) state.events.push(editing);
           state.color = editing.color;
           save();
