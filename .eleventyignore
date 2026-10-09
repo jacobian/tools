@@ -2,3 +2,7 @@
 # Liquid template and publish it at /CLAUDE/ -- which also means any {{ ... }}
 # example written in it becomes a template tag and can break the build.
 CLAUDE.md
+
+# The macOS editor for the canyon database: Swift source and a build product,
+# not site content.
+canyon-editor/
