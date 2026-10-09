@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Year Planner</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      .btn {
+        @apply border border-black px-2 py-1 cursor-pointer hover:bg-black hover:text-white;
+      }
+
+      /* Calendar */
+      .month h2 {
+        @apply font-bold mb-2;
+      }
+      .dow,
+      .week {
+        @apply grid grid-cols-7;
+      }
+      .dow span {
+        @apply px-1 pb-1;
+      }
+      /* Row 1 holds the day numbers; every row after it is an event lane. */
+      .week {
+        @apply grid-rows-[1.5rem] auto-rows-[1.25rem] pr-px;
+      }
+      /* Each box overlaps its neighbours by a pixel so shared edges stay hairlines. */
+      .day {
+        @apply -mr-px -mb-px p-0.5 border border-gray-300 cursor-cell;
+      }
+      .day.today {
+        @apply font-bold ring-2 ring-inset ring-black;
+      }
+      .day.sel {
+        @apply bg-black text-white;
+      }
+      .day .num {
+        @apply flex items-center justify-center w-5 h-5 text-xs tabular-nums;
+      }
+      .day.holiday .num {
+        @apply rounded-full bg-gray-500 text-white;
+      }
+      .bar {
+        @apply min-w-0 mx-0.5 mb-0.5 px-1 rounded-sm text-xs leading-[1.125rem] font-semibold truncate cursor-pointer;
+      }
+      /* An event carrying on from, or into, another week or month runs flush. */
+      .bar.from-prev {
+        @apply ml-0 rounded-l-none;
+      }
+      .bar.to-next {
+        @apply mr-0 rounded-r-none;
+      }
+      .dragging .bar {
+        @apply pointer-events-none;
+      }
+
+      /* Legend */
+      .legend-row {
+        @apply grid grid-cols-[auto_1.25rem_minmax(0,1fr)_1rem] items-center gap-2 mb-2;
+      }
+      .legend-row input[type="text"] {
+        @apply border-b border-gray-300 py-0.5 focus:outline-none focus:border-black;
+      }
+      .legend-row input[type="radio"] {
+        @apply accent-black cursor-pointer;
+      }
+      .legend-row button {
+        @apply cursor-pointer;
+      }
+      input[type="color"] {
+        @apply appearance-none w-5 h-5 p-0 border-0 bg-transparent cursor-pointer;
+      }
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      input[type="color"]::-webkit-color-swatch {
+        border: 0;
+        border-radius: 0;
+      }
+      input[type="color"]::-moz-color-swatch {
+        border: 0;
+        border-radius: 0;
+      }
+
+      /* Event list */
+      .event-row {
+        @apply flex items-center gap-2 mb-1 cursor-pointer;
+      }
+      .event-row .chip {
+        @apply w-2.5 h-2.5 shrink-0;
+      }
+      .event-row .title {
+        @apply flex-1 truncate;
+      }
+      .event-row .dates {
+        @apply shrink-0 tabular-nums;
+      }
+
+      /* Colour choice in the event editor */
+      .swatch {
+        @apply block w-5 h-5 cursor-pointer;
+      }
+      .swatch input {
+        @apply sr-only;
+      }
+      .swatch:has(:checked) {
+        @apply ring-2 ring-black ring-offset-2;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-black font-sans text-sm">
+    <div class="mx-auto max-w-7xl p-6 flex items-start gap-10">
+      <div class="flex-1 min-w-0">
+        <header class="flex items-center gap-2 mb-6">
+          <h1 class="font-bold mr-3">Year Planner</h1>
+          <button id="prev" type="button" class="btn" aria-label="Previous year">&#9664;</button>
+          <input id="year" type="number" step="1" aria-label="Year" class="border border-black w-20 px-2 py-1 text-center font-bold" />
+          <button id="next" type="button" class="btn" aria-label="Next year">&#9654;</button>
+          <span id="status" class="ml-3 font-bold"></span>
+        </header>
+        <main id="cal" class="grid grid-cols-3 gap-x-10 gap-y-8 select-none"></main>
+      </div>
+
+      <aside class="w-56 shrink-0 sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto divide-y divide-gray-300">
+        <p class="pb-4">Drag across days to add an event; click a day for a single one. Click an event to edit it.</p>
+        <section class="py-4">
+          <h2 class="font-bold mb-3">Legend</h2>
+          <div id="legend"></div>
+          <button id="add-color" type="button" class="btn mt-1">+ Add color</button>
+        </section>
+        <section class="pt-4">
+          <h2 class="font-bold mb-3">Events</h2>
+          <ul id="events"></ul>
+        </section>
+      </aside>
+    </div>
+
+    <form id="editor" class="fixed z-10 w-64 grid gap-3 p-3 bg-white border-2 border-black" hidden>
+      <input name="title" placeholder="Title" autocomplete="off" required class="border border-black px-2 py-1 font-bold" />
+      <div id="editor-colors" class="flex flex-wrap gap-2 p-1"></div>
+      <div class="flex gap-2">
+        <button type="submit" class="btn">Save</button>
+        <button type="button" id="cancel" class="btn">Cancel</button>
+        <button type="button" id="delete" class="btn ml-auto">Delete</button>
+      </div>
+    </form>
+
+    <div id="tip" class="fixed z-20 max-w-xs px-2 py-1 bg-black text-white text-xs pointer-events-none" hidden></div>
+
+    <script>
+      const STORAGE_KEY = "year-planner";
+      // The first four are what a new planner starts with; "Add color" hands
+      // out the rest in order.
+      const PRESETS = {
+        red: "#d00000",
+        yellow: "#ffd60a",
+        green: "#1a7f37",
+        blue: "#1d4ed8",
+        orange: "#ff7b00",
+        cyan: "#3bc9db",
+        purple: "#7b2cbf",
+        black: "#222222",
+        pink: "#d6336c",
+        brown: "#7f5539",
+      };
+      const STARTING_COLORS = 4;
+      const MONTHS = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+      ];
+      const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+      const $ = (id) => document.getElementById(id);
+      const cal = $("cal");
+      const editor = $("editor");
+      const yearInput = $("year");
+      const status = $("status");
+      const tip = $("tip");
+
+      // state.events: [{id, title, start, end, color}], dates as inclusive
+      // "YYYY-MM-DD" strings (which compare correctly as strings); color is a
+      // state.colors id. state.colors: [{id, bg, name}]. state.color: the id
+      // new events get.
+      const state = load();
+      const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+      function load() {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") ?? {};
+        const events = saved.events ?? [];
+        let colors = saved.colors;
+        if (!colors) {
+          // A first run -- or data from when the palette was fixed and events
+          // referred to preset names, in which case keep the ones in use.
+          const used = new Set(events.map((ev) => ev.color));
+          colors = Object.entries(PRESETS)
+            .filter(([id], i) => i < STARTING_COLORS || used.has(id))
+            .map(([id, bg]) => ({ id, bg, name: saved.names?.[id] ?? "" }));
+        }
+        const color = colors.some((c) => c.id === saved.color) ? saved.color : colors[0].id;
+        return { events, colors, color };
+      }
+
+      let year = Number(location.hash.slice(1)) || new Date().getFullYear() + 1;
+      let holidays = new Map(); // "YYYY-MM-DD" -> name, for the displayed year
+      let drag = null; // {anchor, start, end} while dragging out a range
+      let editing = null; // the event in the editor; not yet in state.events if new
+
+      // --- dates ---------------------------------------------------------
+
+      const pad = (n) => String(n).padStart(2, "0");
+      const iso = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+      const utc = (s) => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8));
+      const dayCount = (start, end) => (utc(end) - utc(start)) / 864e5 + 1;
+      const short = (s) => `${MONTHS[+s.slice(5, 7) - 1].slice(0, 3)} ${+s.slice(8)}`;
+      const describe = (start, end) =>
+        start === end ? short(start) : `${short(start)} – ${short(end)} (${dayCount(start, end)}d)`;
+
+      // Day of the month of the nth `weekday` (0 = Sunday) in month `m`;
+      // n = -1 for the last one.
+      function nthWeekday(y, m, weekday, n) {
+        if (n > 0) return 1 + ((weekday - new Date(y, m, 1).getDay() + 7) % 7) + (n - 1) * 7;
+        const length = new Date(y, m + 1, 0).getDate();
+        return length - ((new Date(y, m, length).getDay() - weekday + 7) % 7);
+      }
+
+      // Anonymous Gregorian algorithm; returns [month, day].
+      function easter(y) {
+        const a = y % 19, b = Math.floor(y / 100), c = y % 100;
+        const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+        const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+        const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
+        const n = h + l - 7 * Math.floor((a + 11 * h + 22 * l) / 451) + 114;
+        return [Math.floor(n / 31) - 1, (n % 31) + 1];
+      }
+
+      // US federal holidays on their actual dates (not the observed weekday),
+      // plus a few that aren't days off but do get planned around.
+      function usHolidays(y) {
+        return new Map(
+          [
+            [0, 1, "New Year's Day"],
+            [0, nthWeekday(y, 0, 1, 3), "MLK Day"],
+            [1, nthWeekday(y, 1, 1, 3), "Presidents' Day"],
+            [...easter(y), "Easter"],
+            [4, nthWeekday(y, 4, 0, 2), "Mother's Day"],
+            [4, nthWeekday(y, 4, 1, -1), "Memorial Day"],
+            [5, 19, "Juneteenth"],
+            [5, nthWeekday(y, 5, 0, 3), "Father's Day"],
+            [6, 4, "Independence Day"],
+            [8, nthWeekday(y, 8, 1, 1), "Labor Day"],
+            [9, nthWeekday(y, 9, 1, 2), "Indigenous Peoples' Day"],
+            [9, 31, "Halloween"],
+            [10, 11, "Veterans Day"],
+            [10, nthWeekday(y, 10, 4, 4), "Thanksgiving"],
+            [11, 25, "Christmas"],
+          ].map(([m, d, name]) => [iso(y, m, d), name]),
+        );
+      }
+
+      // --- rendering -----------------------------------------------------
+
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text != null) node.textContent = text;
+        return node;
+      }
+
+      // Black or white, whichever reads better on `bg` ("#rrggbb").
+      function inkOn(bg) {
+        const [r, g, b] = [1, 3, 5].map((i) => parseInt(bg.slice(i, i + 2), 16));
+        return r * 299 + g * 587 + b * 114 > 150000 ? "#000" : "#fff";
+      }
+
+      function paint(node, bg) {
+        node.style.background = bg;
+        node.style.color = inkOn(bg);
+      }
+
+      function render() {
+        yearInput.value = year;
+        tip.hidden = true;
+        holidays = usHolidays(year);
+        // Longest-first within a start date keeps long events in the top lanes.
+        const events = state.events.toSorted(
+          (a, b) => a.start.localeCompare(b.start) || b.end.localeCompare(a.end),
+        );
+        cal.replaceChildren(...MONTHS.map((_, m) => renderMonth(m, events)));
+        renderLegend();
+        renderEventList(events);
+      }
+
+      function renderMonth(m, events) {
+        const month = el("section", "month");
+        month.append(el("h2", "", MONTHS[m]));
+        const dow = el("div", "dow");
+        for (const name of WEEKDAYS) dow.append(el("span", "", name));
+        month.append(dow);
+
+        const length = new Date(year, m + 1, 0).getDate();
+        const offset = new Date(year, m, 1).getDay();
+        for (let first = 1 - offset; first <= length; first += 7) {
+          month.append(renderWeek(m, Math.max(first, 1), Math.min(first + 6, length), offset, events));
+        }
+        return month;
+      }
+
+      // One row of a month: days `from`..`to`. Day cells span the number row
+      // and every lane beneath it; events sit in the lanes.
+      function renderWeek(m, from, to, offset, events) {
+        const week = el("div", "week");
+        const column = (d) => ((offset + d - 1) % 7) + 1;
+        const weekStart = iso(year, m, from);
+        const weekEnd = iso(year, m, to);
+        const today = iso(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+
+        const bars = [];
+        const lanes = []; // lanes[i] = last day occupied in lane i
+        for (const ev of events) {
+          if (ev.end < weekStart || ev.start > weekEnd) continue;
+          const s = ev.start < weekStart ? from : +ev.start.slice(8);
+          const e = ev.end > weekEnd ? to : +ev.end.slice(8);
+          let lane = lanes.findIndex((last) => last < s);
+          if (lane < 0) lane = lanes.length;
+          lanes[lane] = e;
+
+          const color = state.colors.find((c) => c.id === ev.color) ?? state.colors[0];
+          const bar = el("div", "bar", ev.title);
+          bar.dataset.id = ev.id;
+          bar.dataset.tip = [ev.title, describe(ev.start, ev.end), color.name].filter(Boolean).join(" · ");
+          paint(bar, color.bg);
+          bar.style.gridColumn = `${column(s)} / ${column(e) + 1}`;
+          bar.style.gridRow = lane + 2;
+          bar.classList.toggle("from-prev", ev.start < weekStart);
+          bar.classList.toggle("to-next", ev.end > weekEnd);
+          bars.push(bar);
+        }
+
+        for (let d = from; d <= to; d++) {
+          const day = el("div", "day");
+          const date = iso(year, m, d);
+          day.append(el("span", "num", d));
+          day.dataset.date = date;
+          day.style.gridColumn = column(d);
+          day.style.gridRow = `1 / span ${Math.max(lanes.length, 1) + 1}`;
+          day.classList.toggle("today", date === today);
+          day.classList.toggle("holiday", holidays.has(date));
+          if (holidays.has(date)) day.dataset.tip = holidays.get(date);
+          week.append(day);
+        }
+        week.append(...bars);
+        return week;
+      }
+
+      function paintSelection(start, end) {
+        for (const day of cal.querySelectorAll(".day")) {
+          day.classList.toggle("sel", !!start && day.dataset.date >= start && day.dataset.date <= end);
+        }
+      }
+
+      // --- legend --------------------------------------------------------
+
+      // Rebuilt on every render -- but typing a name only saves, it doesn't
+      // render, so the field keeps focus.
+      function renderLegend() {
+        const inUse = new Set(state.events.map((ev) => ev.color));
+
+        const rows = state.colors.map((color) => {
+          const row = el("div", "legend-row");
+
+          const active = el("input");
+          active.type = "radio";
+          active.name = "active-color";
+          active.checked = color.id === state.color;
+          active.title = "Use for new events";
+          active.addEventListener("change", () => {
+            state.color = color.id;
+            save();
+          });
+
+          const swatch = el("input");
+          swatch.type = "color";
+          swatch.value = color.bg;
+          swatch.title = "Change color";
+          swatch.addEventListener("change", () => {
+            color.bg = swatch.value;
+            save();
+            render();
+          });
+
+          const name = el("input");
+          name.type = "text";
+          name.placeholder = "Name";
+          name.value = color.name;
+          name.addEventListener("input", () => {
+            color.name = name.value;
+            save();
+          });
+
+          // Only a color nothing uses can go, so no event is left colorless.
+          const remove = el("button", "", "×");
+          remove.type = "button";
+          remove.title = "Remove color";
+          remove.hidden = inUse.has(color.id) || state.colors.length === 1;
+          remove.addEventListener("click", () => {
+            state.colors = state.colors.filter((c) => c !== color);
+            if (state.color === color.id) state.color = state.colors[0].id;
+            save();
+            render();
+          });
+
+          row.append(active, swatch, name, remove);
+          return row;
+        });
+        $("legend").replaceChildren(...rows);
+      }
+
+      // --- event list ----------------------------------------------------
+
+      const monthDay = (s) => `${+s.slice(5, 7)}/${+s.slice(8)}`;
+
+      // Everything touching the displayed year, in date order. Rows carry the
+      // event id, so pressing one opens the editor just as pressing its bar does.
+      function renderEventList(events) {
+        const rows = events
+          .filter((ev) => ev.end >= iso(year, 0, 1) && ev.start <= iso(year, 11, 31))
+          .map((ev) => {
+            const color = state.colors.find((c) => c.id === ev.color) ?? state.colors[0];
+            const row = el("li", "event-row");
+            row.dataset.id = ev.id;
+            const chip = el("span", "chip");
+            chip.style.background = color.bg;
+            const dates = ev.start === ev.end ? monthDay(ev.start) : `${monthDay(ev.start)}–${monthDay(ev.end)}`;
+            row.append(chip, el("span", "title", ev.title), el("span", "dates", dates));
+            return row;
+          });
+        $("events").replaceChildren(...(rows.length ? rows : [el("li", "", `Nothing in ${year} yet.`)]));
+      }
+
+      $("add-color").addEventListener("click", () => {
+        const taken = new Set(state.colors.map((c) => c.bg));
+        const bg = Object.values(PRESETS).find((preset) => !taken.has(preset)) ?? "#888888";
+        const color = { id: crypto.randomUUID(), bg, name: "" };
+        state.colors.push(color);
+        state.color = color.id;
+        save();
+        render();
+      });
+
+      // --- editor --------------------------------------------------------
+
+      function openEditor(ev, x, y) {
+        editing = ev;
+        $("editor-colors").replaceChildren(
+          ...state.colors.map((color) => {
+            const swatch = el("label", "swatch");
+            swatch.style.background = color.bg;
+            swatch.title = color.name;
+            const radio = el("input");
+            radio.type = "radio";
+            radio.name = "color";
+            radio.value = color.id;
+            radio.checked = color.id === ev.color;
+            swatch.append(radio);
+            return swatch;
+          }),
+        );
+        editor.elements.title.value = ev.title;
+        $("delete").hidden = !state.events.includes(ev);
+        paintSelection(ev.start, ev.end);
+
+        editor.hidden = false;
+        const { width, height } = editor.getBoundingClientRect();
+        editor.style.left = `${Math.max(4, Math.min(x, innerWidth - width - 4))}px`;
+        editor.style.top = `${Math.max(4, Math.min(y + 10, innerHeight - height - 4))}px`;
+        editor.elements.title.focus();
+        editor.elements.title.select();
+      }
+
+      // Saving needs a title; closing without one is the same as cancelling,
+      // which for a new event means it's never added.
+      function closeEditor(commit) {
+        if (editor.hidden) return;
+        const title = editor.elements.title.value.trim();
+        if (commit && title) {
+          Object.assign(editing, { title, color: editor.elements.color.value || editing.color });
+          if (!state.events.includes(editing)) state.events.push(editing);
+          state.color = editing.color;
+          save();
+        }
+        editor.hidden = true;
+        editing = null;
+        status.textContent = "";
+        render();
+      }
+
+      editor.addEventListener("submit", (e) => {
+        e.preventDefault();
+        closeEditor(true);
+      });
+      $("cancel").addEventListener("click", () => closeEditor(false));
+      $("delete").addEventListener("click", () => {
+        state.events = state.events.filter((ev) => ev !== editing);
+        save();
+        closeEditor(false);
+      });
+
+      // --- pointer: drag out a range, or click an event ------------------
+
+      // One handler for everything outside the editor, because closing the
+      // editor re-renders the calendar: by the time a separate click handler
+      // ran, the element under the pointer would have been replaced.
+      document.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0 || editor.contains(e.target)) return;
+        tip.hidden = true;
+        closeEditor(true);
+
+        const pressed = e.target.closest("[data-id]");
+        if (pressed) {
+          const ev = state.events.find((ev) => ev.id === pressed.dataset.id);
+          if (ev) openEditor(ev, e.clientX, e.clientY);
+          return;
+        }
+        const day = e.target.closest(".day");
+        if (!day) return;
+        e.preventDefault();
+        const date = day.dataset.date;
+        drag = { anchor: date, start: date, end: date };
+        document.body.classList.add("dragging");
+        paintSelection(date, date);
+        status.textContent = describe(date, date);
+      });
+
+      document.addEventListener("pointermove", (e) => {
+        if (!drag) return;
+        const day = document.elementFromPoint(e.clientX, e.clientY)?.closest(".day");
+        if (!day) return;
+        [drag.start, drag.end] = [drag.anchor, day.dataset.date].sort();
+        paintSelection(drag.start, drag.end);
+        status.textContent = describe(drag.start, drag.end);
+      });
+
+      function endDrag() {
+        const finished = drag;
+        drag = null;
+        document.body.classList.remove("dragging");
+        return finished;
+      }
+
+      document.addEventListener("pointerup", (e) => {
+        const range = endDrag();
+        if (!range) return;
+        const ev = { id: crypto.randomUUID(), title: "", start: range.start, end: range.end, color: state.color };
+        openEditor(ev, e.clientX, e.clientY);
+      });
+
+      document.addEventListener("pointercancel", () => {
+        if (endDrag()) paintSelection();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        if (endDrag()) paintSelection();
+        status.textContent = "";
+        closeEditor(false);
+      });
+
+      // --- tooltip -------------------------------------------------------
+
+      // Our own rather than the title attribute, which takes a second to show.
+      // Sits above whatever carries a data-tip, or below when there's no room.
+      // An event bar only gets one if its title is cut off.
+      document.addEventListener("pointerover", (e) => {
+        let target = drag || !editor.hidden ? null : e.target.closest?.("[data-tip]");
+        if (target?.matches(".bar") && target.scrollWidth <= target.clientWidth) target = null;
+        tip.hidden = !target;
+        if (!target) return;
+        tip.textContent = target.dataset.tip;
+        // An event's own colors; a holiday has none set, leaving the default.
+        tip.style.background = target.style.background;
+        tip.style.color = target.style.color;
+        const box = target.getBoundingClientRect();
+        const top = box.top - tip.offsetHeight - 4;
+        tip.style.left = `${Math.max(4, Math.min(box.left, innerWidth - tip.offsetWidth - 4))}px`;
+        tip.style.top = `${top < 4 ? box.bottom + 4 : top}px`;
+      });
+      addEventListener("scroll", () => (tip.hidden = true), true);
+
+      // --- year ----------------------------------------------------------
+
+      function setYear(y) {
+        if (!Number.isInteger(y)) return render();
+        closeEditor(true);
+        year = y;
+        history.replaceState(null, "", `#${y}`);
+        render();
+      }
+      $("prev").addEventListener("click", () => setYear(year - 1));
+      $("next").addEventListener("click", () => setYear(year + 1));
+      yearInput.addEventListener("change", () => setYear(yearInput.valueAsNumber));
+      addEventListener("hashchange", () => setYear(Number(location.hash.slice(1))));
+
+      render();
+    </script>
+  </body>
+</html>
