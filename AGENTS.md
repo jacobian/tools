@@ -60,6 +60,16 @@ Replaces v1. Both are built; v1 is untouched until cutover.
   so its guessing rules can be iterated on. Roles and events are inferred from
   the notes prose and are guesses.
 
+### Editing the data
+
+`canyon-editor/` is a small SwiftUI app over `data/canyons.db` — `just edit`
+builds and opens it. Built with SwiftPM and wrapped into an app bundle by
+`canyon-editor/build.sh`; no Xcode, no dependencies. It is in `.eleventyignore`.
+The role and flow vocabularies are copied from `lib/canyonlog.js` into
+`canyon-editor/Sources/CanyonEditor/Models.swift`, so a change to either needs
+the other. Hand-editing the DB with `sqlite3` still works; the app assumes it
+is the only writer while it's open.
+
 **Cutover** (when v2 is ready): remove `canyons/`, `bin/fetch-canyons`,
 `.github/workflows/refresh-canyons.yml`, `_data/canyons.json`,
 `_data/canyon_stats.json` and the `fetch-data` recipe; `git mv canyons-v2 canyons`;
